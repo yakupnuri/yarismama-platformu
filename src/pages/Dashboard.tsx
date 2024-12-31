@@ -6,9 +6,11 @@ import { useToast } from "@/hooks/use-toast";
 import { PerformanceCharts } from "@/components/dashboard/PerformanceCharts";
 import { DailyActivities } from "@/components/dashboard/DailyActivities";
 import { getUserData } from "@/data/tempStorage";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [userAge, setUserAge] = useState<string>("");
   const [userColor, setUserColor] = useState<string>("hsl(var(--primary))");
   const [rankings, setRankings] = useState<Array<{name: string, points: number, color: string}>>([]);
@@ -22,6 +24,7 @@ const Dashboard = () => {
         description: "Lütfen önce giriş yapın!",
         variant: "destructive",
       });
+      navigate("/");
       return;
     }
 
@@ -54,7 +57,7 @@ const Dashboard = () => {
         }
       ]);
     }
-  }, [toast]);
+  }, [toast, navigate]);
 
   const weeklyData = [
     { name: "Pazartesi", puan: 20 },
