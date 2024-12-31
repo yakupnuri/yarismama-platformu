@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Star, Heart } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { CompetitionActivity } from "./CompetitionActivity";
 import { CheckboxActivity } from "./CheckboxActivity";
@@ -17,7 +17,16 @@ export const DailyActivities = ({ userAge, onScoreUpdate }: DailyActivitiesProps
   const [activityValues, setActivityValues] = useState<{ [key: string]: string }>({});
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
   const [uploadedImages, setUploadedImages] = useState<{ [key: string]: string }>({});
+  const [submittedActivities, setSubmittedActivities] = useState<string[]>([]);
   const { toast } = useToast();
+
+  // LocalStorage'dan yüklenen aktiviteleri kontrol et
+  useEffect(() => {
+    const savedActivities = localStorage.getItem("submittedActivities");
+    if (savedActivities) {
+      setSubmittedActivities(JSON.parse(savedActivities));
+    }
+  }, []);
 
   const checkboxActivities = [
     { id: "family", name: "Aileye Yardım Etme Çizelgesi", points: 2 },
@@ -88,6 +97,17 @@ export const DailyActivities = ({ userAge, onScoreUpdate }: DailyActivitiesProps
       return;
     }
 
+    // Yüklenen resimleri submittedActivities'e ekle
+    const newSubmittedActivities = [...submittedActivities];
+    Object.keys(uploadedImages).forEach(activityId => {
+      if (!submittedActivities.includes(activityId)) {
+        newSubmittedActivities.push(activityId);
+      }
+    });
+    
+    setSubmittedActivities(newSubmittedActivities);
+    localStorage.setItem("submittedActivities", JSON.stringify(newSubmittedActivities));
+
     // Calculate total points (excluding jury-evaluated activities)
     let totalPoints = 0;
 
@@ -141,6 +161,7 @@ export const DailyActivities = ({ userAge, onScoreUpdate }: DailyActivitiesProps
                 selected={selectedActivity === activity.id}
                 activityValue={activityValues[activity.id] || ""}
                 uploadedImage={uploadedImages[activity.id]}
+                disabled={submittedActivities.includes(activity.id) && activity.isJuryEvaluated}
                 onSelect={() => setSelectedActivity(activity.id)}
                 onValueChange={(value) => {
                   setActivityValues(prev => ({

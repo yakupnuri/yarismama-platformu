@@ -14,6 +14,7 @@ interface CompetitionActivityProps {
   uploadedImage?: string;
   isJuryEvaluated?: boolean;
   warningMessage?: string;
+  disabled?: boolean;
   onSelect: () => void;
   onValueChange?: (value: string) => void;
   onImageUpload?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -32,6 +33,7 @@ export const CompetitionActivity = ({
   uploadedImage,
   isJuryEvaluated,
   warningMessage,
+  disabled,
   onSelect,
   onValueChange,
   onImageUpload,
@@ -55,13 +57,13 @@ export const CompetitionActivity = ({
   return (
     <div
       className={`flex items-center justify-between p-4 rounded-xl transition-all duration-300 transform hover:scale-[1.02] ${
-        uploadedImage ? 'cursor-default opacity-90' : 'cursor-pointer'
+        uploadedImage ? 'cursor-default opacity-90' : disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
       } ${
         selected
           ? "bg-gradient-to-r from-[#E5DEFF] to-[#FEF9D7] border-2 border-[#40E0D0] shadow-lg"
           : "bg-white/80 hover:bg-white border-2 border-transparent hover:border-[#40E0D0]/20 shadow-md"
       }`}
-      onClick={uploadedImage ? undefined : onSelect}
+      onClick={disabled || uploadedImage ? undefined : onSelect}
     >
       <div className="flex items-center gap-4">
         <div className={`p-3 rounded-full ${selected ? 'bg-[#40E0D0]/10' : 'bg-[#40E0D0]/5'}`}>
@@ -110,7 +112,9 @@ export const CompetitionActivity = ({
               <>
                 <label
                   htmlFor={`image-${id}`}
-                  className="cursor-pointer block w-20 h-20 border-2 border-dashed border-[#40E0D0]/30 rounded-xl flex items-center justify-center hover:border-[#40E0D0] transition-colors bg-white/50 hover:bg-white"
+                  className={`cursor-pointer block w-20 h-20 border-2 border-dashed border-[#40E0D0]/30 rounded-xl flex items-center justify-center hover:border-[#40E0D0] transition-colors bg-white/50 hover:bg-white ${
+                    disabled ? 'cursor-not-allowed opacity-50' : ''
+                  }`}
                   onClick={(e) => e.stopPropagation()}
                 >
                   {placeholder ? (
@@ -130,6 +134,7 @@ export const CompetitionActivity = ({
                   className="hidden"
                   onChange={handleImageUpload}
                   onClick={(e) => e.stopPropagation()}
+                  disabled={disabled}
                 />
               </>
             )}
