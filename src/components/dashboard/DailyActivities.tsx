@@ -12,7 +12,7 @@ interface DailyActivitiesProps {
 
 export const DailyActivities = ({ userAge }: DailyActivitiesProps) => {
   const [selectedActivity, setSelectedActivity] = useState("");
-  const [activityValue, setActivityValue] = useState("");
+  const [activityValues, setActivityValues] = useState<{ [key: string]: string }>({});
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
   const [uploadedImages, setUploadedImages] = useState<{ [key: string]: string }>({});
   const { toast } = useToast();
@@ -93,10 +93,28 @@ export const DailyActivities = ({ userAge }: DailyActivitiesProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedActivity && Object.keys(checkedItems).length === 0) {
+    
+    const hasSelectedActivity = Object.keys(activityValues).length > 0 || Object.keys(checkedItems).length > 0;
+    
+    if (!hasSelectedActivity) {
       toast({
         title: "Hata",
         description: "Lütfen en az bir etkinlik seçin!",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate numeric inputs
+    const invalidInputs = Object.entries(activityValues).filter(([_, value]) => {
+      const numValue = Number(value);
+      return isNaN(numValue) || numValue < 0;
+    });
+
+    if (invalidInputs.length > 0) {
+      toast({
+        title: "Hata",
+        description: "Lütfen geçerli sayısal değerler girin!",
         variant: "destructive",
       });
       return;
@@ -106,8 +124,16 @@ export const DailyActivities = ({ userAge }: DailyActivitiesProps) => {
       title: "Başarılı",
       description: "Etkinlikler kaydedildi!",
     });
-    setActivityValue("");
+    
+    setActivityValues({});
     setCheckedItems({});
+  };
+
+  const handleActivityValueChange = (activityId: string, value: string) => {
+    setActivityValues(prev => ({
+      ...prev,
+      [activityId]: value
+    }));
   };
 
   return (
@@ -131,10 +157,10 @@ export const DailyActivities = ({ userAge }: DailyActivitiesProps) => {
                 key={activity.id}
                 {...activity}
                 selected={selectedActivity === activity.id}
-                activityValue={selectedActivity === activity.id ? activityValue : ""}
+                activityValue={activityValues[activity.id] || ""}
                 uploadedImage={uploadedImages[activity.id]}
                 onSelect={() => setSelectedActivity(activity.id)}
-                onValueChange={setActivityValue}
+                onValueChange={(value) => handleActivityValueChange(activity.id, value)}
                 onImageUpload={(e) => handleImageUpload(activity.id, e)}
                 onImageRemove={() => {
                   setUploadedImages(prev => {
