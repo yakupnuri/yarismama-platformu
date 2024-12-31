@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Crown, Medal, Trophy, Star } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { motion } from "framer-motion";
 import axios from 'axios';
 
@@ -18,8 +18,11 @@ const Leaderboard = ({ className = '' }) => {
   useEffect(() => {
     const fetchRankings = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/competition/rankings');
-        setRankings(response.data);
+        const response = await axios.get('http://localhost:3001/api/user/leaderboard');
+        setRankings(response.data.map((user: any) => ({
+          name: user.email.split('@')[0],
+          points: user.score || 0
+        })));
       } catch (error) {
         console.error('Error fetching rankings:', error);
         // Fallback to mock data if API fails
