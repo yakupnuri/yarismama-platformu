@@ -97,7 +97,7 @@ const Dashboard = () => {
             <img
               src="/lovable-uploads/acd36c23-c6bb-40b7-9f7c-e255f13c9779.png"
               alt="Atlas Kinder Logo"
-              className="h-24 w-auto"
+              className="h-32 w-auto" // Updated height to match score card
             />
             <h1 className="text-2xl font-bold text-gray-800">
               Yarışma Takip Sistemi
