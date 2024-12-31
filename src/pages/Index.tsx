@@ -29,9 +29,14 @@ const Index = () => {
               ÜÇ AYLAR ÇOCUKLAR İÇİN ÖDÜLLÜ YARIŞMA PROGRAMI
             </h2>
           </div>
+
+          {/* Auth Section */}
+          <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
+            <AuthTabs />
+          </div>
           
           {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl mt-12">
             <Card className="p-6 bg-gradient-to-br from-[#9b87f5]/10 to-[#9b87f5]/5 border-[#9b87f5]">
               <h3 className="text-xl font-semibold text-[#9b87f5]">Yarışma Detayları</h3>
               <p className="mt-2 text-gray-600">Yarışma kuralları ve katılım şartları</p>
@@ -40,11 +45,6 @@ const Index = () => {
             <Card className="p-6 bg-gradient-to-br from-[#0EA5E9]/10 to-[#0EA5E9]/5 border-[#0EA5E9]">
               <h3 className="text-xl font-semibold text-[#0EA5E9]">Ödüller</h3>
               <p className="mt-2 text-gray-600">Kazananlara verilecek ödüller</p>
-            </Card>
-            
-            <Card className="p-6 bg-gradient-to-br from-[#9b87f5]/10 to-[#9b87f5]/5 border-[#9b87f5]">
-              <h3 className="text-xl font-semibold text-[#9b87f5]">Başvuru</h3>
-              <p className="mt-2 text-gray-600">Yarışmaya başvuru süreci</p>
             </Card>
           </div>
         </div>
