@@ -8,8 +8,8 @@ interface CompetitionSectionProps {
   uploadedImages: { [key: string]: string };
   submittedActivities: string[];
   setSelectedActivity: (id: string) => void;
-  setActivityValues: (values: { [key: string]: string }) => void;
-  setUploadedImages: (images: { [key: string]: string }) => void;
+  setActivityValues: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
+  setUploadedImages: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
 }
 
 export const CompetitionSection = ({
@@ -42,7 +42,7 @@ export const CompetitionSection = ({
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setUploadedImages(prev => ({
+      setUploadedImages((prev) => ({
         ...prev,
         [activityId]: reader.result as string
       }));
@@ -66,14 +66,14 @@ export const CompetitionSection = ({
           disabled={submittedActivities.includes(activity.id) && activity.isJuryEvaluated}
           onSelect={() => setSelectedActivity(activity.id)}
           onValueChange={(value) => {
-            setActivityValues(prev => ({
+            setActivityValues((prev) => ({
               ...prev,
               [activity.id]: value
             }));
           }}
           onImageUpload={(e) => handleImageUpload(activity.id, e)}
           onImageRemove={() => {
-            setUploadedImages(prev => {
+            setUploadedImages((prev) => {
               const newImages = { ...prev };
               delete newImages[activity.id];
               return newImages;

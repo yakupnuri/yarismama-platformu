@@ -3,7 +3,7 @@ import { CheckboxActivity } from "../../CheckboxActivity";
 
 interface DailyTasksSectionProps {
   checkedItems: { [key: string]: boolean };
-  setCheckedItems: (items: { [key: string]: boolean }) => void;
+  setCheckedItems: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
 }
 
 export const DailyTasksSection = ({
@@ -29,7 +29,7 @@ export const DailyTasksSection = ({
           {...activity}
           checked={checkedItems[activity.id] || false}
           onCheckedChange={(checked) => {
-            setCheckedItems(prev => ({
+            setCheckedItems((prev) => ({
               ...prev,
               [activity.id]: checked === true
             }));
