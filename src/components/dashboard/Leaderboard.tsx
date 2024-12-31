@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Crown } from "lucide-react";
-import { getCurrentUser } from "@/services/api";
 import axios from 'axios';
 
 const Leaderboard = ({ className = '' }) => {
