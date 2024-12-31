@@ -4,42 +4,51 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import { getUserData } from "@/data/tempStorage";
 
 export const LoginForm = () => {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Test kullanıcısı için özel kontrol
-    if (email === "test@test.com" && password === "password") {
-      localStorage.setItem("userEmail", email);
-      toast({
-        title: "Başarılı",
-        description: "Giriş yapıldı!",
+    try {
+      const response = await fetch('http://localhost:3001/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          identifier,
+          password,
+        }),
       });
-      navigate("/dashboard");
-      return;
-    }
 
-    // Diğer kayıtlı kullanıcılar için kontrol
-    const userData = getUserData(email);
-    if (userData) {
-      localStorage.setItem("userEmail", email);
-      toast({
-        title: "Başarılı",
-        description: "Giriş yapıldı!",
-      });
-      navigate("/dashboard");
-    } else {
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("userId", data.user.id);
+        localStorage.setItem("userEmail", data.user.email);
+        
+        toast({
+          title: "Başarılı",
+          description: "Giriş yapıldı!",
+        });
+        navigate("/dashboard");
+      } else {
+        toast({
+          title: "Hata",
+          description: data.message || "Giriş başarısız!",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
       toast({
         title: "Hata",
-        description: "Email veya şifre hatalı!",
+        description: "Bir hata oluştu. Lütfen tekrar deneyin.",
         variant: "destructive",
       });
     }
@@ -49,10 +58,10 @@ export const LoginForm = () => {
     <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
       <div className="space-y-2">
         <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          placeholder="Email veya Kullanıcı Adı"
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
           required
         />
       </div>

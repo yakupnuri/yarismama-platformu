@@ -6,14 +6,21 @@ const bcrypt = require('bcryptjs');
 // Kullanıcı kaydı
 router.post('/register', async (req, res) => {
   try {
-    const { email, password, age, gender, color } = req.body;
+    const { email, password, age, gender, color, username } = req.body;
     
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ 
+      $or: [
+        { email },
+        { username }
+      ]
+    });
+    
     if (existingUser) {
-      return res.status(400).json({ message: 'Bu email zaten kayıtlı' });
+      return res.status(400).json({ message: 'Bu email veya kullanıcı adı zaten kayıtlı' });
     }
 
     const user = new User({
+      username,
       email,
       password,
       age,
@@ -26,7 +33,8 @@ router.post('/register', async (req, res) => {
       message: 'Kullanıcı başarıyla kaydedildi',
       user: {
         id: user._id,
-        email: user.email
+        email: user.email,
+        username: user.username
       }
     });
   } catch (error) {
@@ -37,24 +45,30 @@ router.post('/register', async (req, res) => {
 // Kullanıcı girişi
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const { identifier, password } = req.body; // identifier can be either email or username
+    
+    const user = await User.findOne({
+      $or: [
+        { email: identifier },
+        { username: identifier }
+      ]
+    });
     
     if (!user) {
-      return res.status(401).json({ message: 'Email veya şifre hatalı' });
+      return res.status(401).json({ message: 'Kullanıcı adı/email veya şifre hatalı' });
     }
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(401).json({ message: 'Email veya şifre hatalı' });
+      return res.status(401).json({ message: 'Kullanıcı adı/email veya şifre hatalı' });
     }
 
-    // Kullanıcı bilgilerini döndürürken ID'yi de ekleyelim
     res.json({
       message: 'Giriş başarılı',
       user: {
         id: user._id,
         email: user.email,
+        username: user.username,
         age: user.age,
         gender: user.gender,
         color: user.color,
@@ -69,7 +83,7 @@ router.post('/login', async (req, res) => {
 // Kullanıcı listesi
 router.get('/leaderboard', async (req, res) => {
   try {
-    const users = await User.find({}, 'email score color')
+    const users = await User.find({}, 'username email score color')
       .sort({ score: -1 })
       .limit(10);
     res.json(users);

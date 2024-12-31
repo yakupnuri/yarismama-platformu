@@ -11,6 +11,7 @@ import { ColorPicker } from "./ColorPicker";
 
 export const RegisterForm = () => {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [age, setAge] = useState("");
@@ -30,7 +31,7 @@ export const RegisterForm = () => {
       });
       return;
     }
-    if (!age || !gender) {
+    if (!age || !gender || !username) {
       toast({
         title: "Hata",
         description: "Lütfen tüm alanları doldurun!",
@@ -47,6 +48,7 @@ export const RegisterForm = () => {
         },
         body: JSON.stringify({
           email,
+          username,
           password,
           age,
           gender,
@@ -57,12 +59,12 @@ export const RegisterForm = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Kullanıcı verilerini localStorage'a kaydet
         localStorage.setItem("userId", data.user.id);
         localStorage.setItem("userEmail", email);
 
         saveUserData(email, {
           email,
+          username,
           age,
           gender,
           avatarPreview,
@@ -93,6 +95,16 @@ export const RegisterForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-sm">
+      <div className="space-y-2">
+        <Input
+          type="text"
+          placeholder="Kullanıcı Adı"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+      </div>
+      
       <div className="space-y-2">
         <Input
           type="email"
