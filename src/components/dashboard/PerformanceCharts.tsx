@@ -16,43 +16,44 @@ interface PerformanceChartsProps {
 export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: PerformanceChartsProps) => {
   const chartConfig = {
     puan: {
-      color: userColor || "#1e293b",
+      color: userColor || "#94a3b8",
       label: "Puan"
     },
   };
 
   const commonChartProps = {
-    barSize: 40,
-    className: "h-[300px]",
+    barSize: 20,
+    className: "h-[200px]",
+    margin: { top: 5, right: 5, bottom: 5, left: 5 }
   };
 
   const commonAxisProps = {
     axisLine: false,
     tickLine: false,
-    fontSize: 12,
+    fontSize: 10,
     stroke: "#94a3b8",
+    tick: { fill: '#94a3b8' }
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg font-medium">
-            <Trophy className="w-5 h-5" />
-            Haftalık Performans
+    <div className="grid grid-cols-1 gap-4">
+      <Card className="bg-[#FEF7CD] border-none shadow-sm">
+        <CardHeader className="p-3">
+          <CardTitle className="text-sm font-medium text-gray-700">
+            Önceki Performansın
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <ChartContainer config={chartConfig} className="h-[300px]">
+        <CardContent className="p-3">
+          <ChartContainer config={chartConfig}>
             <BarChart data={weeklyData} {...commonChartProps}>
-              <CartesianGrid vertical={false} strokeDasharray="3 3" opacity={0.1} />
+              <CartesianGrid vertical={false} horizontal={false} />
               <XAxis 
                 dataKey="name" 
                 {...commonAxisProps}
               />
               <YAxis 
                 {...commonAxisProps}
-                width={30}
+                width={20}
               />
               <Tooltip 
                 content={<ChartTooltipContent />}
@@ -60,32 +61,31 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
               />
               <Bar 
                 dataKey="puan" 
-                fill={userColor || "#1e293b"}
-                radius={[4, 4, 0, 0]}
+                fill={userColor || "#94a3b8"}
+                radius={[2, 2, 0, 0]}
               />
             </BarChart>
           </ChartContainer>
         </CardContent>
       </Card>
 
-      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg font-medium">
-            <Trophy className="w-5 h-5" />
-            Aylık Performans
+      <Card className="bg-[#FDE1D3] border-none shadow-sm">
+        <CardHeader className="p-3">
+          <CardTitle className="text-sm font-medium text-gray-700">
+            Rakiplerinin Performansı
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <ChartContainer config={chartConfig} className="h-[300px]">
+        <CardContent className="p-3">
+          <ChartContainer config={chartConfig}>
             <BarChart data={monthlyData} {...commonChartProps}>
-              <CartesianGrid vertical={false} strokeDasharray="3 3" opacity={0.1} />
+              <CartesianGrid vertical={false} horizontal={false} />
               <XAxis 
                 dataKey="name" 
                 {...commonAxisProps}
               />
               <YAxis 
                 {...commonAxisProps}
-                width={30}
+                width={20}
               />
               <Tooltip 
                 content={<ChartTooltipContent />}
@@ -93,8 +93,8 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
               />
               <Bar 
                 dataKey="puan" 
-                fill={userColor || "#1e293b"}
-                radius={[4, 4, 0, 0]}
+                fill={userColor || "#94a3b8"}
+                radius={[2, 2, 0, 0]}
               />
             </BarChart>
           </ChartContainer>
