@@ -29,16 +29,11 @@ const Index = () => {
               ÜÇ AYLAR ÇOCUKLAR İÇİN ÖDÜLLÜ YARIŞMA PROGRAMI
             </h2>
           </div>
-
-          {/* Auth Section */}
-          <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
-            <AuthTabs />
-          </div>
           
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mt-12">
-            <Card className="p-6 bg-gradient-to-br from-[#F97316]/10 to-[#F97316]/5 border-[#F97316]">
-              <h3 className="text-xl font-semibold text-[#F97316]">Yarışma Detayları</h3>
+            <Card className="p-6 bg-gradient-to-br from-[#9b87f5]/10 to-[#9b87f5]/5 border-[#9b87f5]">
+              <h3 className="text-xl font-semibold text-[#9b87f5]">Yarışma Detayları</h3>
               <p className="mt-2 text-gray-600">Yarışma kuralları ve katılım şartları</p>
             </Card>
             
