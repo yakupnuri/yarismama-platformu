@@ -8,6 +8,7 @@ import { DailyActivities } from "@/components/dashboard/DailyActivities";
 import { getUserData } from "@/data/tempStorage";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { AnimatedScore } from "@/components/dashboard/AnimatedScore";
 
 const Dashboard = () => {
   const { toast } = useToast();
@@ -17,6 +18,8 @@ const Dashboard = () => {
   const [userAvatar, setUserAvatar] = useState<string>("");
   const [rankings, setRankings] = useState<Array<{name: string, points: number, color: string}>>([]);
   const [currentUserEmail, setCurrentUserEmail] = useState<string>("");
+  const [score, setScore] = useState(156);
+  const [previousScore, setPreviousScore] = useState(156);
 
   useEffect(() => {
     const userEmail = localStorage.getItem("userEmail");
@@ -62,6 +65,11 @@ const Dashboard = () => {
     }
   }, [toast, navigate]);
 
+  const handleScoreUpdate = (newPoints: number) => {
+    setPreviousScore(score);
+    setScore(prev => prev + newPoints);
+  };
+
   const weeklyData = [
     { name: "Pazartesi", puan: 20 },
     { name: "Salı", puan: 25 },
@@ -96,10 +104,14 @@ const Dashboard = () => {
           <div className="flex items-center gap-6">
             <div className="flex flex-col items-end gap-1">
               <div className="text-sm text-gray-600">Yaş: {userAge}</div>
-              <p className="text-2xl font-bold text-primary flex items-center gap-2">
-                <Trophy className="w-6 h-6" />
-                156
-              </p>
+              <div className="flex items-center gap-2">
+                <Trophy className="w-6 h-6" style={{ color: userColor }} />
+                <AnimatedScore 
+                  score={score} 
+                  previousScore={previousScore}
+                  color={userColor}
+                />
+              </div>
             </div>
             <div className="relative">
               <Avatar className="h-12 w-12">
@@ -123,7 +135,7 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <DailyActivities userAge={userAge} />
+          <DailyActivities userAge={userAge} onScoreUpdate={handleScoreUpdate} />
 
           <div className="space-y-8">
             <PerformanceCharts

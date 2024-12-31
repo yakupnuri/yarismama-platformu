@@ -8,9 +8,10 @@ import { CheckboxActivity } from "./CheckboxActivity";
 
 interface DailyActivitiesProps {
   userAge: string;
+  onScoreUpdate: (points: number) => void;
 }
 
-export const DailyActivities = ({ userAge }: DailyActivitiesProps) => {
+export const DailyActivities = ({ userAge, onScoreUpdate }: DailyActivitiesProps) => {
   const [selectedActivity, setSelectedActivity] = useState("");
   const [activityValues, setActivityValues] = useState<{ [key: string]: string }>({});
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
@@ -119,6 +120,30 @@ export const DailyActivities = ({ userAge }: DailyActivitiesProps) => {
       });
       return;
     }
+
+    // Calculate total points
+    let totalPoints = 0;
+
+    // Add points from competition activities
+    Object.entries(activityValues).forEach(([activityId, value]) => {
+      const activity = competitionActivities.find(a => a.id === activityId);
+      if (activity) {
+        totalPoints += activity.points * Number(value);
+      }
+    });
+
+    // Add points from checkbox activities
+    Object.entries(checkedItems).forEach(([activityId, checked]) => {
+      if (checked) {
+        const activity = checkboxActivities.find(a => a.id === activityId);
+        if (activity) {
+          totalPoints += activity.points;
+        }
+      }
+    });
+
+    // Update score
+    onScoreUpdate(totalPoints);
 
     toast({
       title: "Başarılı",
