@@ -38,13 +38,10 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
 
   // Transform data to include user colors
   const transformDataWithColors = (data: any[]) => {
-    return data.map(item => {
-      const userData = getUserData(item.email);
-      return {
-        ...item,
-        fill: userData?.color || "#94a3b8" // Use user's selected color or fallback
-      };
-    });
+    return data.map(item => ({
+      ...item,
+      fill: userColor // Use the user's color for all bars
+    }));
   };
 
   const coloredWeeklyData = transformDataWithColors(weeklyData);
@@ -77,7 +74,6 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
               />
               <Bar 
                 dataKey="puan"
-                fill="#8B5CF6"
                 radius={[4, 4, 0, 0]}
                 fillOpacity={0.9}
               >
@@ -117,7 +113,6 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
               />
               <Bar 
                 dataKey="puan"
-                fill="#F97316"
                 radius={[4, 4, 0, 0]}
                 fillOpacity={0.9}
               >
