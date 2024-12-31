@@ -87,9 +87,9 @@ const Dashboard = () => {
             <img
               src="/lovable-uploads/acd36c23-c6bb-40b7-9f7c-e255f13c9779.png"
               alt="Atlas Kinder Logo"
-              className="h-24 w-auto" // Logo boyutu artırıldı
+              className="h-24 w-auto"
             />
-            <h1 className="text-2xl font-bold text-gray-800"> {/* Başlık boyutu küçültüldü */}
+            <h1 className="text-2xl font-bold text-gray-800">
               Yarışma Takip Sistemi
             </h1>
           </div>
@@ -136,7 +136,7 @@ const Dashboard = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Star className="w-6 h-6 text-primary" />
-                  Genel Sıralama ({userAge} Yaş Grubu)
+                  Genel Sıralama (4-8 Yaş Grubu)
                 </CardTitle>
               </CardHeader>
               <CardContent>
