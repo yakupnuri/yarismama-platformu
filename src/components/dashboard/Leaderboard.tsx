@@ -19,13 +19,23 @@ const Leaderboard = ({ className = '' }) => {
     const fetchRankings = async () => {
       try {
         const response = await axios.get('http://localhost:3001/api/user/leaderboard');
-        setRankings(response.data.map((user: any) => ({
-          name: user.email.split('@')[0],
-          points: user.score || 0
-        })));
+        if (response.data && Array.isArray(response.data)) {
+          setRankings(response.data.map((user: any) => ({
+            name: user.email.split('@')[0],
+            points: user.score || 0
+          })));
+        } else {
+          throw new Error('Invalid data format received from API');
+        }
       } catch (error) {
         console.error('Error fetching rankings:', error);
-        // Fallback to mock data if API fails
+        toast({
+          title: "Veri yüklenirken hata oluştu",
+          description: "Örnek veriler gösteriliyor",
+          variant: "destructive",
+        });
+        
+        // Fallback mock data
         const mockRankings = [
           { name: "Ahmet", points: 450 },
           { name: "Ayşe", points: 400 },
@@ -38,7 +48,7 @@ const Leaderboard = ({ className = '' }) => {
     };
 
     fetchRankings();
-  }, []);
+  }, [toast]);
 
   const getPositionIcon = (index: number) => {
     switch (index) {
