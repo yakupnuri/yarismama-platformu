@@ -7,12 +7,14 @@ import { PerformanceCharts } from "@/components/dashboard/PerformanceCharts";
 import { DailyActivities } from "@/components/dashboard/DailyActivities";
 import { getUserData } from "@/data/tempStorage";
 import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const Dashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [userAge, setUserAge] = useState<string>("");
   const [userColor, setUserColor] = useState<string>("hsl(var(--primary))");
+  const [userAvatar, setUserAvatar] = useState<string>("");
   const [rankings, setRankings] = useState<Array<{name: string, points: number, color: string}>>([]);
   const [currentUserEmail, setCurrentUserEmail] = useState<string>("");
 
@@ -33,6 +35,7 @@ const Dashboard = () => {
     if (userData) {
       setUserAge(userData.age);
       setUserColor(userData.color || "hsl(var(--primary))");
+      setUserAvatar(userData.avatarPreview || "");
 
       // Simüle edilmiş kullanıcı verileri
       const ahmetData = getUserData("ahmet@example.com");
@@ -80,23 +83,41 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 py-12 px-4">
       <div className="container mx-auto max-w-6xl">
         <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <img
               src="/lovable-uploads/acd36c23-c6bb-40b7-9f7c-e255f13c9779.png"
               alt="Atlas Kinder Logo"
-              className="h-16 w-auto"
+              className="h-24 w-auto" // Logo boyutu artırıldı
             />
-            <h1 className="text-4xl font-bold text-gray-800">
+            <h1 className="text-2xl font-bold text-gray-800"> {/* Başlık boyutu küçültüldü */}
               Yarışma Takip Sistemi
             </h1>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <p className="text-sm text-gray-600">Hoş geldin, {currentUserEmail}</p>
+          <div className="flex items-center gap-6">
+            <div className="flex flex-col items-end gap-1">
+              <div className="text-sm text-gray-600">Yaş: {userAge}</div>
               <p className="text-2xl font-bold text-primary flex items-center gap-2">
                 <Trophy className="w-6 h-6" />
                 156
               </p>
+            </div>
+            <div className="relative">
+              <Avatar className="h-12 w-12">
+                {userAvatar ? (
+                  <AvatarImage src={userAvatar} alt="Kullanıcı avatarı" />
+                ) : (
+                  <AvatarFallback>
+                    {currentUserEmail.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                )}
+              </Avatar>
+              <div 
+                className="absolute inset-0 rounded-full -m-1"
+                style={{ 
+                  border: `2px solid ${userColor}`,
+                  content: '""'
+                }}
+              />
             </div>
           </div>
         </div>
