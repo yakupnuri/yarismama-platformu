@@ -4,30 +4,50 @@ import { AuthTabs } from "@/components/auth/AuthTabs";
 import { CompetitionDetailsModal } from "@/components/CompetitionDetailsModal";
 import { PrizesModal } from "@/components/PrizesModal";
 import { useState, useEffect } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 const Index = () => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showPrizesModal, setShowPrizesModal] = useState(false);
   const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'error'>('checking');
+  const { toast } = useToast();
 
   useEffect(() => {
     const checkDbConnection = async () => {
       try {
-        const response = await fetch('http://localhost:5000/');
+        // Use environment-aware API URL
+        const apiUrl = import.meta.env.PROD 
+          ? 'https://your-production-api.com' // Replace with your actual production API URL
+          : 'http://localhost:5000';
+
+        const response = await fetch(`${apiUrl}/`);
+        if (!response.ok) {
+          throw new Error('API response was not ok');
+        }
         const data = await response.json();
         if (data.message === 'Yarışma API çalışıyor') {
           setDbStatus('connected');
+          toast({
+            title: "Bağlantı Başarılı",
+            description: "Veritabanı bağlantısı kuruldu",
+          });
         } else {
           setDbStatus('error');
+          throw new Error('Unexpected API response');
         }
       } catch (error) {
         setDbStatus('error');
         console.error('Veritabanı bağlantı hatası:', error);
+        toast({
+          title: "Bağlantı Hatası",
+          description: "Şu anda sunucuya bağlanılamıyor. Lütfen daha sonra tekrar deneyin.",
+          variant: "destructive",
+        });
       }
     };
 
     checkDbConnection();
-  }, []);
+  }, [toast]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100">
