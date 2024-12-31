@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Upload } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export const RegisterForm = () => {
   const [email, setEmail] = useState("");
@@ -14,13 +15,14 @@ export const RegisterForm = () => {
   const [age, setAge] = useState("");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>("");
-  const [hue, setHue] = useState(180); // Başlangıç renk tonu
+  const [hue, setHue] = useState(180);
+  const [gender, setGender] = useState<string>("");
   const { toast } = useToast();
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      if (file.size > 5 * 1024 * 1024) {
         toast({
           title: "Hata",
           description: "Dosya boyutu 5MB'dan küçük olmalıdır!",
@@ -47,7 +49,7 @@ export const RegisterForm = () => {
       });
       return;
     }
-    if (!age || !avatarFile) {
+    if (!age || !avatarFile || !gender) {
       toast({
         title: "Hata",
         description: "Lütfen tüm alanları doldurun!",
@@ -61,7 +63,6 @@ export const RegisterForm = () => {
     });
   };
 
-  // HSL renk değerini hesapla
   const selectedColor = `hsl(${hue}, 70%, 60%)`;
 
   return (
@@ -106,6 +107,28 @@ export const RegisterForm = () => {
       </div>
 
       <div className="space-y-4">
+        <Label>Kendini nasıl tanımlıyorsun?</Label>
+        <RadioGroup
+          onValueChange={setGender}
+          className="flex flex-col space-y-2"
+          required
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="kiz" id="kiz" />
+            <Label htmlFor="kiz" className="cursor-pointer">Kız</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="erkek" id="erkek" />
+            <Label htmlFor="erkek" className="cursor-pointer">Erkek</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="other" id="other" />
+            <Label htmlFor="other" className="cursor-pointer">Söylemek İstemiyorum</Label>
+          </div>
+        </RadioGroup>
+      </div>
+
+      <div className="space-y-4">
         <Label>Senin Avatarın</Label>
         <div className="flex flex-col items-center space-y-4">
           {avatarPreview ? (
@@ -114,6 +137,7 @@ export const RegisterForm = () => {
                 src={avatarPreview}
                 alt="Avatar önizleme"
                 className="w-full h-full object-cover rounded-full"
+                style={{ border: `4px solid ${selectedColor}` }}
               />
               <button
                 type="button"
@@ -127,8 +151,11 @@ export const RegisterForm = () => {
               </button>
             </div>
           ) : (
-            <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center">
-              <Upload className="w-8 h-8 text-gray-400" />
+            <div 
+              className="w-32 h-32 border-2 border-dashed rounded-full flex items-center justify-center"
+              style={{ borderColor: selectedColor }}
+            >
+              <Upload className="w-8 h-8" style={{ color: selectedColor }} />
             </div>
           )}
           <Input
