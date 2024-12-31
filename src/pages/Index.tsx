@@ -8,7 +8,6 @@ import { useState } from "react";
 const Index = () => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showPrizesModal, setShowPrizesModal] = useState(false);
-  const [showPrizesEditModal, setShowPrizesEditModal] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100">
@@ -43,7 +42,7 @@ const Index = () => {
           </div>
           
           {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl mt-12">
             <Card 
               className="p-6 bg-gradient-to-br from-[#9b87f5]/10 to-[#9b87f5]/5 border-[#9b87f5] cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02]"
               onClick={() => setShowDetailsModal(true)}
@@ -59,14 +58,6 @@ const Index = () => {
               <h3 className="text-xl font-semibold text-[#9b87f5]">Ödüller</h3>
               <p className="mt-2 text-gray-600">Kazananlara verilecek ödüller</p>
             </Card>
-
-            <Card 
-              className="p-6 bg-gradient-to-br from-[#9b87f5]/10 to-[#9b87f5]/5 border-[#9b87f5] cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02]"
-              onClick={() => setShowPrizesEditModal(true)}
-            >
-              <h3 className="text-xl font-semibold text-[#9b87f5]">Ödülleri Düzenle</h3>
-              <p className="mt-2 text-gray-600">Ödül listesini düzenle</p>
-            </Card>
           </div>
         </div>
       </div>
@@ -80,12 +71,6 @@ const Index = () => {
         open={showPrizesModal}
         onOpenChange={setShowPrizesModal}
         isEditing={false}
-      />
-
-      <PrizesModal
-        open={showPrizesEditModal}
-        onOpenChange={setShowPrizesEditModal}
-        isEditing={true}
       />
     </div>
   );
