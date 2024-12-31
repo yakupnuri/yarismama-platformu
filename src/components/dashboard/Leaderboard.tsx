@@ -15,16 +15,25 @@ const Leaderboard = ({ className = '' }) => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // For now, use mock data instead of API calls since backend is not ready
-    const mockRankings = [
-      { name: "Ahmet", points: 450 },
-      { name: "Ayşe", points: 400 },
-      { name: "Mehmet", points: 350 },
-      { name: "Fatma", points: 300 },
-      { name: "Ali", points: 250 }
-    ];
-    
-    setRankings(mockRankings);
+    const fetchRankings = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/competition/rankings');
+        setRankings(response.data);
+      } catch (error) {
+        console.error('Error fetching rankings:', error);
+        // Fallback to mock data if API fails
+        const mockRankings = [
+          { name: "Ahmet", points: 450 },
+          { name: "Ayşe", points: 400 },
+          { name: "Mehmet", points: 350 },
+          { name: "Fatma", points: 300 },
+          { name: "Ali", points: 250 }
+        ];
+        setRankings(mockRankings);
+      }
+    };
+
+    fetchRankings();
   }, []);
 
   return (
