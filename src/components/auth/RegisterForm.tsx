@@ -3,44 +3,22 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
-import { Upload, User, UserRound, Eye, EyeOff } from "lucide-react";
-import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { saveUserData } from "@/data/tempStorage";
+import { PasswordInput } from "./PasswordInput";
+import { AvatarUpload } from "./AvatarUpload";
+import { ColorPicker } from "./ColorPicker";
 
 export const RegisterForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [age, setAge] = useState("");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>("");
   const [hue, setHue] = useState(180);
   const [gender, setGender] = useState<string>("");
   const { toast } = useToast();
-
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast({
-          title: "Hata",
-          description: "Dosya boyutu 5MB'dan küçük olmalıdır!",
-          variant: "destructive",
-        });
-        return;
-      }
-      setAvatarFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatarPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,7 +39,6 @@ export const RegisterForm = () => {
       return;
     }
 
-    // Geçici dosyaya kaydet
     saveUserData(email, {
       email,
       age,
@@ -78,18 +55,6 @@ export const RegisterForm = () => {
 
   const selectedColor = `hsl(${hue}, 70%, 60%)`;
 
-  const getDefaultAvatar = () => {
-    if (!avatarFile) {
-      if (gender === "kiz") {
-        return <UserRound className="w-16 h-16" style={{ color: selectedColor }} />;
-      } else if (gender === "erkek") {
-        return <User className="w-16 h-16" style={{ color: selectedColor }} />;
-      }
-      return <Upload className="w-8 h-8" style={{ color: selectedColor }} />;
-    }
-    return null;
-  };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-sm">
       <div className="space-y-2">
@@ -101,38 +66,21 @@ export const RegisterForm = () => {
           required
         />
       </div>
-      <div className="space-y-2 relative">
-        <Input
-          type={showPassword ? "text" : "password"}
-          placeholder="Şifre"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button
-          type="button"
-          onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
-        >
-          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-        </button>
-      </div>
-      <div className="space-y-2 relative">
-        <Input
-          type={showConfirmPassword ? "text" : "password"}
-          placeholder="Şifreyi Tekrarla"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
-        <button
-          type="button"
-          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
-        >
-          {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-        </button>
-      </div>
+      
+      <PasswordInput
+        value={password}
+        onChange={setPassword}
+        placeholder="Şifre"
+        required
+      />
+      
+      <PasswordInput
+        value={confirmPassword}
+        onChange={setConfirmPassword}
+        placeholder="Şifreyi Tekrarla"
+        required
+      />
+
       <div className="space-y-2">
         <Input
           type="number"
@@ -163,68 +111,15 @@ export const RegisterForm = () => {
         </RadioGroup>
       </div>
 
-      <div className="space-y-4">
-        <Label>Senin Avatarın</Label>
-        <div className="flex flex-col items-center space-y-4">
-          {avatarPreview ? (
-            <div className="relative w-32 h-32">
-              <img
-                src={avatarPreview}
-                alt="Avatar önizleme"
-                className="w-full h-full object-cover rounded-full"
-                style={{ border: `4px solid ${selectedColor}` }}
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  setAvatarFile(null);
-                  setAvatarPreview("");
-                }}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-              >
-                ×
-              </button>
-            </div>
-          ) : (
-            <div 
-              className="w-32 h-32 border-2 border-dashed rounded-full flex items-center justify-center"
-              style={{ borderColor: selectedColor }}
-            >
-              {getDefaultAvatar()}
-            </div>
-          )}
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={handleAvatarChange}
-            className="hidden"
-            id="avatar-upload"
-          />
-          <Label
-            htmlFor="avatar-upload"
-            className="cursor-pointer bg-secondary hover:bg-secondary/80 text-secondary-foreground px-4 py-2 rounded-md"
-          >
-            Avatar Yükle
-          </Label>
-        </div>
-      </div>
+      <AvatarUpload
+        avatarPreview={avatarPreview}
+        setAvatarPreview={setAvatarPreview}
+        setAvatarFile={setAvatarFile}
+        gender={gender}
+        selectedColor={selectedColor}
+      />
 
-      <div className="space-y-4">
-        <Label>Senin Rengin Ne?</Label>
-        <div className="space-y-6">
-          <div 
-            className="w-full h-24 rounded-lg"
-            style={{ backgroundColor: selectedColor }}
-          />
-          <Slider
-            value={[hue]}
-            onValueChange={(values) => setHue(values[0])}
-            max={360}
-            step={1}
-            className="w-full"
-          />
-        </div>
-      </div>
+      <ColorPicker hue={hue} setHue={setHue} />
 
       <Button type="submit" className="w-full bg-[#90EE90] hover:bg-[#90EE90]/90">
         Kayıt Ol
