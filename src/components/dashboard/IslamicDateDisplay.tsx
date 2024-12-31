@@ -1,0 +1,91 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { Calendar, BookOpen } from "lucide-react";
+import { toHijri } from "hijri-converter";
+
+const quranVerses = [
+  {
+    verse: "Namazı dosdoğru kılın, zekâtı verin. Rükû edenlerle birlikte siz de rükû edin.",
+    reference: "Bakara Suresi, 2:43"
+  },
+  {
+    verse: "Sabır ve namaz ile Allah'tan yardım dileyin. Şüphesiz namaz, Allah'a derinden saygı duyanlardan başkasına ağır gelir.",
+    reference: "Bakara Suresi, 2:45"
+  },
+  {
+    verse: "Muhakkak ki namaz, müminler üzerine vakitleri belirlenmiş bir farzdır.",
+    reference: "Nisa Suresi, 4:103"
+  },
+  {
+    verse: "Namazı kılın, zekâtı verin ve Resule itaat edin ki merhamet olunasınız.",
+    reference: "Nur Suresi, 24:56"
+  },
+  {
+    verse: "Ben cinleri ve insanları ancak bana kulluk etsinler diye yarattım.",
+    reference: "Zariyat Suresi, 51:56"
+  }
+];
+
+export const IslamicDateDisplay = () => {
+  const [currentVerse, setCurrentVerse] = useState(quranVerses[0]);
+  const startDate = new Date(2025, 0, 1); // 1 Ocak 2025
+  const endDate = new Date(2025, 2, 31); // 31 Mart 2025
+
+  // Convert to Hijri
+  const startHijri = toHijri(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate());
+  const endHijri = toHijri(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate());
+
+  useEffect(() => {
+    // Her gün farklı bir ayet göster
+    const today = new Date();
+    const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+    const verseIndex = dayOfYear % quranVerses.length;
+    setCurrentVerse(quranVerses[verseIndex]);
+  }, []);
+
+  return (
+    <div className="grid gap-4 md:grid-cols-2">
+      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-xl flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-primary" />
+            Yarışma Tarihleri
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <div className="text-sm">
+              <span className="font-semibold">Başlangıç:</span>
+              <div className="ml-4">
+                <div>1 Ocak 2025 Çarşamba</div>
+                <div className="text-primary">{startHijri.monthName} {startHijri.hy}</div>
+              </div>
+            </div>
+            <div className="text-sm">
+              <span className="font-semibold">Bitiş:</span>
+              <div className="ml-4">
+                <div>31 Mart 2025 Pazar</div>
+                <div className="text-primary">{endHijri.monthName} {endHijri.hy}</div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-xl flex items-center gap-2">
+            <BookOpen className="h-5 w-5 text-primary" />
+            Günün Ayeti
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <p className="text-sm italic">{currentVerse.verse}</p>
+            <p className="text-xs text-primary font-medium">{currentVerse.reference}</p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};

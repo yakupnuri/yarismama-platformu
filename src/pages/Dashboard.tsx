@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { PerformanceCharts } from "@/components/dashboard/PerformanceCharts";
 import { DailyActivities } from "@/components/dashboard/DailyActivities";
+import { IslamicDateDisplay } from "@/components/dashboard/IslamicDateDisplay";
 import { getUserData } from "@/data/tempStorage";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -148,9 +149,13 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* Add IslamicDateDisplay before the main grid */}
+        <div className="mb-8">
+          <IslamicDateDisplay />
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <DailyActivities userAge={userAge} onScoreUpdate={handleScoreUpdate} />
-
           <div className="space-y-8">
             <PerformanceCharts
               weeklyData={weeklyData}
