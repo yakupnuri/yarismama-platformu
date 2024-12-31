@@ -10,6 +10,7 @@ interface UserData {
     value: number;
     points: number;
   }[];
+  prizes?: string;
 }
 
 const tempStorage: { [key: string]: UserData } = {
@@ -18,8 +19,9 @@ const tempStorage: { [key: string]: UserData } = {
     age: "5",
     gender: "kiz",
     avatarPreview: "",
-    color: "#8B5CF6", // Vivid purple color from the palette
+    color: "#8B5CF6",
     activities: [],
+    prizes: "",
   }
 };
 
@@ -32,6 +34,7 @@ export const saveUserData = (email: string, data: Partial<UserData>) => {
       avatarPreview: "",
       color: "",
       activities: [],
+      prizes: "",
     };
   }
   tempStorage[email] = { ...tempStorage[email], ...data };

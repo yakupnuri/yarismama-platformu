@@ -2,10 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { CompetitionDetailsModal } from "@/components/CompetitionDetailsModal";
+import { PrizesModal } from "@/components/PrizesModal";
 import { useState } from "react";
 
 const Index = () => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showPrizesModal, setShowPrizesModal] = useState(false);
+  const [showPrizesEditModal, setShowPrizesEditModal] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100">
@@ -40,7 +43,7 @@ const Index = () => {
           </div>
           
           {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mt-12">
             <Card 
               className="p-6 bg-gradient-to-br from-[#9b87f5]/10 to-[#9b87f5]/5 border-[#9b87f5] cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02]"
               onClick={() => setShowDetailsModal(true)}
@@ -49,9 +52,20 @@ const Index = () => {
               <p className="mt-2 text-gray-600">Yarışma kuralları ve katılım şartları</p>
             </Card>
             
-            <Card className="p-6 bg-gradient-to-br from-[#0EA5E9]/10 to-[#0EA5E9]/5 border-[#0EA5E9]">
-              <h3 className="text-xl font-semibold text-[#0EA5E9]">Ödüller</h3>
+            <Card 
+              className="p-6 bg-gradient-to-br from-[#9b87f5]/10 to-[#9b87f5]/5 border-[#9b87f5] cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02]"
+              onClick={() => setShowPrizesModal(true)}
+            >
+              <h3 className="text-xl font-semibold text-[#9b87f5]">Ödüller</h3>
               <p className="mt-2 text-gray-600">Kazananlara verilecek ödüller</p>
+            </Card>
+
+            <Card 
+              className="p-6 bg-gradient-to-br from-[#9b87f5]/10 to-[#9b87f5]/5 border-[#9b87f5] cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02]"
+              onClick={() => setShowPrizesEditModal(true)}
+            >
+              <h3 className="text-xl font-semibold text-[#9b87f5]">Ödülleri Düzenle</h3>
+              <p className="mt-2 text-gray-600">Ödül listesini düzenle</p>
             </Card>
           </div>
         </div>
@@ -60,6 +74,18 @@ const Index = () => {
       <CompetitionDetailsModal 
         open={showDetailsModal} 
         onOpenChange={setShowDetailsModal}
+      />
+
+      <PrizesModal
+        open={showPrizesModal}
+        onOpenChange={setShowPrizesModal}
+        isEditing={false}
+      />
+
+      <PrizesModal
+        open={showPrizesEditModal}
+        onOpenChange={setShowPrizesEditModal}
+        isEditing={true}
       />
     </div>
   );
