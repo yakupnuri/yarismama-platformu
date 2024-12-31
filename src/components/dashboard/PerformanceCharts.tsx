@@ -33,11 +33,25 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[300px]">
             <BarChart data={weeklyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
+              <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
+              <XAxis 
+                dataKey="name" 
+                axisLine={false}
+                tickLine={false}
+                fontSize={12}
+              />
+              <YAxis 
+                axisLine={false}
+                tickLine={false}
+                fontSize={12}
+              />
               <Tooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="puan" fill={userColor || "hsl(var(--primary))"} />
+              <Bar 
+                dataKey="puan" 
+                fill={userColor || "hsl(var(--primary))"} 
+                radius={[4, 4, 0, 0]}
+                maxBarSize={50}
+              />
             </BarChart>
           </ChartContainer>
         </CardContent>
@@ -53,11 +67,25 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[300px]">
             <BarChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
+              <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
+              <XAxis 
+                dataKey="name" 
+                axisLine={false}
+                tickLine={false}
+                fontSize={12}
+              />
+              <YAxis 
+                axisLine={false}
+                tickLine={false}
+                fontSize={12}
+              />
               <Tooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="puan" fill={userColor || "hsl(var(--primary))"} />
+              <Bar 
+                dataKey="puan" 
+                fill={userColor || "hsl(var(--primary))"} 
+                radius={[4, 4, 0, 0]}
+                maxBarSize={50}
+              />
             </BarChart>
           </ChartContainer>
         </CardContent>
