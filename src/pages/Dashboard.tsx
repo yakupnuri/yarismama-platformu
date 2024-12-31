@@ -3,20 +3,26 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
-import { Trophy, Star, Book, Heart, Bookmark, CircleUser } from "lucide-react";
+import { Trophy, Star, Book, Heart, CircleUser, Bookmark } from "lucide-react";
+import { PerformanceCharts } from "@/components/dashboard/PerformanceCharts";
+import { getUserData } from "@/data/tempStorage";
 
 const Dashboard = () => {
   const [selectedActivity, setSelectedActivity] = useState("");
   const [activityValue, setActivityValue] = useState("");
   const { toast } = useToast();
+  const [userAge, setUserAge] = useState<string>("");
+  const [userColor, setUserColor] = useState<string>("hsl(var(--primary))");
+
+  useEffect(() => {
+    const userData = getUserData(localStorage.getItem("userEmail") || "");
+    if (userData) {
+      setUserAge(userData.age);
+      setUserColor(userData.color || "hsl(var(--primary))");
+    }
+  }, []);
 
   const activities4_8 = [
     { id: "sure", name: "Sure Ezberleme", points: 3, icon: <Book className="w-5 h-5" /> },
@@ -30,7 +36,7 @@ const Dashboard = () => {
     { id: "sure", name: "Sure Ezberleme", points: 3, icon: <Bookmark className="w-5 h-5" /> },
   ];
 
-  const chartData = [
+  const weeklyData = [
     { name: "Pazartesi", puan: 20 },
     { name: "Salı", puan: 25 },
     { name: "Çarşamba", puan: 30 },
@@ -40,12 +46,12 @@ const Dashboard = () => {
     { name: "Pazar", puan: 32 },
   ];
 
-  const chartConfig = {
-    puan: {
-      color: "hsl(var(--primary))",
-      label: "Günlük Puan"
-    },
-  };
+  const monthlyData = [
+    { name: "1. Hafta", puan: 180 },
+    { name: "2. Hafta", puan: 220 },
+    { name: "3. Hafta", puan: 190 },
+    { name: "4. Hafta", puan: 240 },
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,13 +71,29 @@ const Dashboard = () => {
     setActivityValue("");
   };
 
+  const getAgeSpecificActivities = () => {
+    if (userAge) {
+      const ageNum = parseInt(userAge);
+      if (ageNum >= 4 && ageNum <= 8) return activities4_8;
+      if (ageNum >= 8 && ageNum <= 10) return activities8_10;
+    }
+    return activities4_8;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 py-12 px-4">
       <div className="container mx-auto max-w-6xl">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-bold text-gray-800">
-            Yarışma Takip Sistemi
-          </h1>
+          <div className="flex items-center gap-4">
+            <img
+              src="/atlas-kinder-logo.png"
+              alt="Atlas Kinder Logo"
+              className="h-16 w-auto"
+            />
+            <h1 className="text-4xl font-bold text-gray-800">
+              Yarışma Takip Sistemi
+            </h1>
+          </div>
           <div className="flex items-center gap-4">
             <div className="text-right">
               <p className="text-sm text-gray-600">Toplam Puanınız</p>
@@ -92,115 +114,55 @@ const Dashboard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="4-8" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-4">
-                  <TabsTrigger value="4-8">4-8 Yaş</TabsTrigger>
-                  <TabsTrigger value="8-10">8-10 Yaş</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="4-8">
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    {activities4_8.map((activity) => (
-                      <div
-                        key={activity.id}
-                        className={`flex items-center justify-between p-4 rounded-lg transition-all duration-200 ${
-                          selectedActivity === activity.id
-                            ? "bg-primary/10 border-2 border-primary"
-                            : "bg-orange-50 hover:bg-orange-100 border-2 border-transparent"
-                        } cursor-pointer`}
-                        onClick={() => setSelectedActivity(activity.id)}
-                      >
-                        <div className="flex items-center gap-3">
-                          {activity.icon}
-                          <div>
-                            <h4 className="font-medium">{activity.name}</h4>
-                            <p className="text-sm text-gray-600">
-                              {activity.points} puan/adet
-                            </p>
-                          </div>
-                        </div>
-                        <Input
-                          type="number"
-                          min="0"
-                          className="w-24"
-                          value={selectedActivity === activity.id ? activityValue : ""}
-                          onChange={(e) => setActivityValue(e.target.value)}
-                          onClick={(e) => e.stopPropagation()}
-                        />
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {getAgeSpecificActivities().map((activity) => (
+                  <div
+                    key={activity.id}
+                    className={`flex items-center justify-between p-4 rounded-lg transition-all duration-200 ${
+                      selectedActivity === activity.id
+                        ? "bg-primary/10 border-2 border-primary"
+                        : "bg-orange-50 hover:bg-orange-100 border-2 border-transparent"
+                    } cursor-pointer`}
+                    onClick={() => setSelectedActivity(activity.id)}
+                  >
+                    <div className="flex items-center gap-3">
+                      {activity.icon}
+                      <div>
+                        <h4 className="font-medium">{activity.name}</h4>
+                        <p className="text-sm text-gray-600">
+                          {activity.points} puan/adet
+                        </p>
                       </div>
-                    ))}
-                    <Button type="submit" className="w-full">
-                      Kaydet
-                    </Button>
-                  </form>
-                </TabsContent>
-
-                <TabsContent value="8-10">
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    {activities8_10.map((activity) => (
-                      <div
-                        key={activity.id}
-                        className={`flex items-center justify-between p-4 rounded-lg transition-all duration-200 ${
-                          selectedActivity === activity.id
-                            ? "bg-primary/10 border-2 border-primary"
-                            : "bg-blue-50 hover:bg-blue-100 border-2 border-transparent"
-                        } cursor-pointer`}
-                        onClick={() => setSelectedActivity(activity.id)}
-                      >
-                        <div className="flex items-center gap-3">
-                          {activity.icon}
-                          <div>
-                            <h4 className="font-medium">{activity.name}</h4>
-                            <p className="text-sm text-gray-600">
-                              {activity.points} puan/adet
-                            </p>
-                          </div>
-                        </div>
-                        <Input
-                          type="number"
-                          min="0"
-                          className="w-24"
-                          value={selectedActivity === activity.id ? activityValue : ""}
-                          onChange={(e) => setActivityValue(e.target.value)}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      </div>
-                    ))}
-                    <Button type="submit" className="w-full">
-                      Kaydet
-                    </Button>
-                  </form>
-                </TabsContent>
-              </Tabs>
+                    </div>
+                    <Input
+                      type="number"
+                      min="0"
+                      className="w-24"
+                      value={selectedActivity === activity.id ? activityValue : ""}
+                      onChange={(e) => setActivityValue(e.target.value)}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </div>
+                ))}
+                <Button type="submit" className="w-full">
+                  Kaydet
+                </Button>
+              </form>
             </CardContent>
           </Card>
 
           <div className="space-y-8">
-            <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Trophy className="w-6 h-6 text-primary" />
-                  Haftalık Performans
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ChartContainer config={chartConfig} className="h-[300px]">
-                  <BarChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip content={<ChartTooltipContent />} />
-                    <Bar dataKey="puan" fill="hsl(var(--primary))" />
-                  </BarChart>
-                </ChartContainer>
-              </CardContent>
-            </Card>
+            <PerformanceCharts
+              weeklyData={weeklyData}
+              monthlyData={monthlyData}
+              userColor={userColor}
+            />
 
             <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Star className="w-6 h-6 text-primary" />
-                  Genel Sıralama
+                  Genel Sıralama ({userAge} Yaş Grubu)
                 </CardTitle>
               </CardHeader>
               <CardContent>
