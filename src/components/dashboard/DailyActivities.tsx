@@ -120,11 +120,6 @@ export const DailyActivities = ({ userAge }: DailyActivitiesProps) => {
               Günlük Etkinlik Girişi
             </span>
           </CardTitle>
-          <img
-            src="/lovable-uploads/acd36c23-c6bb-40b7-9f7c-e255f13c9779.png"
-            alt="Atlas Kinder Logo"
-            className="h-16 w-auto"
-          />
         </div>
         <p className="text-white text-sm">Her gün yeni etkinlikler seni bekliyor! 🌟</p>
       </CardHeader>
