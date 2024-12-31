@@ -1,10 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trophy, Star, Book, Heart, Home, BookOpen } from "lucide-react";
+import { Star, Heart } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { CompetitionActivity } from "./CompetitionActivity";
 import { CheckboxActivity } from "./CheckboxActivity";
+import { competitionActivities } from "@/data/competitionActivities";
 
 interface DailyActivitiesProps {
   userAge: string;
@@ -17,42 +18,6 @@ export const DailyActivities = ({ userAge, onScoreUpdate }: DailyActivitiesProps
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
   const [uploadedImages, setUploadedImages] = useState<{ [key: string]: string }>({});
   const { toast } = useToast();
-
-  const competitionActivities = [
-    { 
-      id: "mosque", 
-      name: "En Güzel Cami Maketi Yarışması", 
-      points: 5, 
-      icon: Home,
-      requiresImage: true,
-      placeholder: "https://images.unsplash.com/photo-1466442929976-97f336a657be"
-    },
-    { 
-      id: "paradise", 
-      name: "Hayalindeki Cennetin Resmini Yap Yarışması", 
-      points: 5, 
-      icon: Star,
-      requiresImage: true
-    },
-    { 
-      id: "prayer", 
-      name: "En Çok Namaz Kılma Yarışması", 
-      points: 5, 
-      icon: Star
-    },
-    { 
-      id: "quran", 
-      name: "En Çok Kur'an Okuma Yarışması", 
-      points: 4, 
-      icon: Book
-    },
-    { 
-      id: "memorize", 
-      name: "En Çok Sure Ezberleme Yarışması", 
-      points: 3, 
-      icon: BookOpen
-    },
-  ];
 
   const checkboxActivities = [
     { id: "family", name: "Aileye Yardım Etme Çizelgesi", points: 2 },
@@ -95,7 +60,9 @@ export const DailyActivities = ({ userAge, onScoreUpdate }: DailyActivitiesProps
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const hasSelectedActivity = Object.keys(activityValues).length > 0 || Object.keys(checkedItems).length > 0;
+    const hasSelectedActivity = Object.keys(activityValues).length > 0 || 
+                              Object.keys(checkedItems).length > 0 ||
+                              Object.keys(uploadedImages).length > 0;
     
     if (!hasSelectedActivity) {
       toast({
@@ -121,13 +88,13 @@ export const DailyActivities = ({ userAge, onScoreUpdate }: DailyActivitiesProps
       return;
     }
 
-    // Calculate total points
+    // Calculate total points (excluding jury-evaluated activities)
     let totalPoints = 0;
 
     // Add points from competition activities
     Object.entries(activityValues).forEach(([activityId, value]) => {
       const activity = competitionActivities.find(a => a.id === activityId);
-      if (activity) {
+      if (activity?.points) {
         totalPoints += activity.points * Number(value);
       }
     });
@@ -149,16 +116,6 @@ export const DailyActivities = ({ userAge, onScoreUpdate }: DailyActivitiesProps
       title: "Başarılı",
       description: "Etkinlikler kaydedildi!",
     });
-    
-    setActivityValues({});
-    setCheckedItems({});
-  };
-
-  const handleActivityValueChange = (activityId: string, value: string) => {
-    setActivityValues(prev => ({
-      ...prev,
-      [activityId]: value
-    }));
   };
 
   return (
@@ -185,7 +142,12 @@ export const DailyActivities = ({ userAge, onScoreUpdate }: DailyActivitiesProps
                 activityValue={activityValues[activity.id] || ""}
                 uploadedImage={uploadedImages[activity.id]}
                 onSelect={() => setSelectedActivity(activity.id)}
-                onValueChange={(value) => handleActivityValueChange(activity.id, value)}
+                onValueChange={(value) => {
+                  setActivityValues(prev => ({
+                    ...prev,
+                    [activity.id]: value
+                  }));
+                }}
                 onImageUpload={(e) => handleImageUpload(activity.id, e)}
                 onImageRemove={() => {
                   setUploadedImages(prev => {

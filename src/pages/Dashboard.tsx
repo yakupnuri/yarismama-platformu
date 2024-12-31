@@ -128,7 +128,7 @@ const Dashboard = () => {
               </div>
             </motion.div>
             <div className="relative">
-              <Avatar className="h-12 w-12 ring-2 ring-offset-2 transition-all duration-300 hover:ring-4" style={{ ringColor: userColor }}>
+              <Avatar className="h-12 w-12 ring-2 ring-offset-2 transition-all duration-300 hover:ring-4" style={{ borderColor: userColor }}>
                 {userAvatar ? (
                   <AvatarImage src={userAvatar} alt="Kullanıcı avatarı" />
                 ) : (
