@@ -1,11 +1,11 @@
-import { Home, Star, Book, BookOpen } from "lucide-react";
+import { Building, Star, Book, BookOpen } from "lucide-react";
 import { CompetitionActivityType } from "@/types/competition";
 
 export const competitionActivities: CompetitionActivityType[] = [
   { 
     id: "mosque", 
     name: "En Güzel Cami Maketi Yarışması", 
-    icon: Home,
+    icon: Building,
     requiresImage: true,
     placeholder: "https://images.unsplash.com/photo-1466442929976-97f336a657be",
     isJuryEvaluated: true
