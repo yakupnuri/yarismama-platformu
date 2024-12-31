@@ -3,11 +3,31 @@ import { Card } from "@/components/ui/card";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { CompetitionDetailsModal } from "@/components/CompetitionDetailsModal";
 import { PrizesModal } from "@/components/PrizesModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Index = () => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showPrizesModal, setShowPrizesModal] = useState(false);
+  const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'error'>('checking');
+
+  useEffect(() => {
+    const checkDbConnection = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/');
+        const data = await response.json();
+        if (data.message === 'Yarışma API çalışıyor') {
+          setDbStatus('connected');
+        } else {
+          setDbStatus('error');
+        }
+      } catch (error) {
+        setDbStatus('error');
+        console.error('Veritabanı bağlantı hatası:', error);
+      }
+    };
+
+    checkDbConnection();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100">
@@ -58,6 +78,21 @@ const Index = () => {
               <h3 className="text-xl font-semibold text-[#9b87f5]">Ödüller</h3>
               <p className="mt-2 text-gray-600">Kazananlara verilecek ödüller</p>
             </Card>
+          </div>
+
+          {/* Database Connection Status */}
+          <div className={`fixed bottom-4 left-4 px-4 py-2 rounded-full text-sm font-medium ${
+            dbStatus === 'connected' 
+              ? 'bg-green-100 text-green-800' 
+              : dbStatus === 'error' 
+                ? 'bg-red-100 text-red-800'
+                : 'bg-yellow-100 text-yellow-800'
+          }`}>
+            {dbStatus === 'connected' 
+              ? '✓ Veritabanı Bağlantısı Aktif' 
+              : dbStatus === 'error' 
+                ? '✗ Veritabanı Bağlantı Hatası'
+                : '⟳ Veritabanı Bağlantısı Kontrol Ediliyor'}
           </div>
         </div>
       </div>
