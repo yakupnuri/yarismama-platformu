@@ -3,52 +3,54 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Trophy, Medal } from "lucide-react";
 import { motion } from "framer-motion";
-import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
 
 interface Ranking {
   name: string;
   points: number;
 }
 
+const fetchLeaderboard = async () => {
+  try {
+    const response = await axios.get('/api/user/leaderboard');
+    if (response.data && Array.isArray(response.data)) {
+      return response.data.map((user: any) => ({
+        name: user.email.split('@')[0],
+        points: user.score || 0
+      }));
+    }
+    throw new Error('Invalid data format received from API');
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    throw error;
+  }
+};
+
 export const Leaderboard = () => {
-  const [rankings, setRankings] = useState<Ranking[]>([]);
   const { toast } = useToast();
+  const { data: rankings, error } = useQuery({
+    queryKey: ['leaderboard'],
+    queryFn: fetchLeaderboard,
+    initialData: [
+      { name: "Ahmet", points: 450 },
+      { name: "Ayşe", points: 400 },
+      { name: "Mehmet", points: 350 },
+      { name: "Fatma", points: 300 },
+      { name: "Ali", points: 250 },
+    ]
+  });
 
   useEffect(() => {
-    const fetchRankings = async () => {
-      try {
-        const response = await axios.get('/api/user/leaderboard');
-        if (response.data && Array.isArray(response.data)) {
-          setRankings(response.data.map((user: any) => ({
-            name: user.email.split('@')[0],
-            points: user.score || 0
-          })));
-        } else {
-          throw new Error('Invalid data format received from API');
-        }
-      } catch (error) {
-        console.error('Error fetching rankings:', error);
-        toast({
-          title: "Veri yüklenirken hata oluştu",
-          description: "Örnek veriler gösteriliyor",
-          variant: "destructive",
-        });
-        
-        // Fallback mock data
-        const mockRankings = [
-          { name: "Ahmet", points: 450 },
-          { name: "Ayşe", points: 400 },
-          { name: "Mehmet", points: 350 },
-          { name: "Fatma", points: 300 },
-          { name: "Ali", points: 250 },
-        ];
-        setRankings(mockRankings);
-      }
-    };
-
-    fetchRankings();
-  }, [toast]);
+    if (error) {
+      toast({
+        title: "Veri yüklenirken hata oluştu",
+        description: "Örnek veriler gösteriliyor",
+        variant: "destructive",
+      });
+    }
+  }, [error, toast]);
 
   const getPositionIcon = (index: number) => {
     switch (index) {
@@ -72,7 +74,7 @@ export const Leaderboard = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {rankings.map((ranking, index) => (
+        {rankings?.map((ranking, index) => (
           <motion.div
             key={ranking.name}
             initial={{ opacity: 0, y: 20 }}
