@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Crown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import axios from 'axios';
 
 interface Ranking {
   name: string;
