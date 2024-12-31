@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import {
   ChartContainer,
   ChartTooltip,
@@ -43,6 +43,7 @@ const Dashboard = () => {
   const chartConfig = {
     puan: {
       color: "hsl(var(--primary))",
+      label: "Günlük Puan"
     },
   };
 
@@ -183,7 +184,7 @@ const Dashboard = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ChartContainer className="h-[300px]">
+                <ChartContainer config={chartConfig} className="h-[300px]">
                   <BarChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
