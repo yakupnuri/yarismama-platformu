@@ -5,18 +5,32 @@ require('dotenv').config();
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// CORS ayarları
+app.use(cors({
+  origin: '*', // Geliştirme aşamasında tüm originlere izin ver
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
 // MongoDB Bağlantısı
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/yarisma')
   .then(() => console.log('MongoDB bağlantısı başarılı'))
   .catch((err) => console.error('MongoDB bağlantı hatası:', err));
 
 // Ana route
 app.get('/', (req, res) => {
   res.json({ message: 'Yarışma API çalışıyor' });
+});
+
+// Hata yönetimi middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ 
+    message: 'Sunucu hatası oluştu',
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
 });
 
 // Port dinleme
