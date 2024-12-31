@@ -25,11 +25,73 @@ const Index = () => {
             <p className="text-2xl md:text-3xl font-semibold text-gray-600">
               Yarışma Platformu
             </p>
+            <h2 className="text-3xl font-bold text-gray-800 mt-8">
+              ÜÇ AYLAR ÇOCUKLAR İÇİN ÖDÜLLÜ YARIŞMA PROGRAMI
+            </h2>
           </div>
 
           {/* Auth Section */}
           <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
             <AuthTabs />
+          </div>
+          
+          {/* Age Groups */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl mt-12">
+            {/* 4-8 Yaş Grubu */}
+            <Card className="p-6 bg-gradient-to-br from-[#F97316]/10 to-[#F97316]/5 border-[#F97316]">
+              <h3 className="text-2xl font-bold text-[#F97316] mb-4">4-8 Yaş Grubu Yarışmaları</h3>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start space-x-2">
+                  <span className="font-semibold">1.</span>
+                  <div>
+                    <span className="font-semibold">En Güzel Cami Maketi Yarışması:</span>
+                    <p className="text-sm">Ailelerle birlikte basit ve renkli cami maketleri yapılacak</p>
+                  </div>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <span className="font-semibold">2.</span>
+                  <div>
+                    <span className="font-semibold">En Çok Sure Ezberleme Yarışması:</span>
+                    <p className="text-sm">Yaşa uygun kısa surelerin ezberlenmesi</p>
+                  </div>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <span className="font-semibold">3.</span>
+                  <div>
+                    <span className="font-semibold">En Çok Salavat Getirme Yarışması:</span>
+                    <p className="text-sm">Günlük salavat sayısı kaydedilecek</p>
+                  </div>
+                </li>
+              </ul>
+            </Card>
+
+            {/* 8-10 Yaş Grubu */}
+            <Card className="p-6 bg-gradient-to-br from-[#0EA5E9]/10 to-[#0EA5E9]/5 border-[#0EA5E9]">
+              <h3 className="text-2xl font-bold text-[#0EA5E9] mb-4">8-10 Yaş Grubu Yarışmaları</h3>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start space-x-2">
+                  <span className="font-semibold">1.</span>
+                  <div>
+                    <span className="font-semibold">En Güzel Cami Maketi Yarışması:</span>
+                    <p className="text-sm">Kendi hayal gücü ve el becerisiyle cami maketi yapımı</p>
+                  </div>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <span className="font-semibold">2.</span>
+                  <div>
+                    <span className="font-semibold">En Çok Namaz Kılma Yarışması:</span>
+                    <p className="text-sm">Günlük namaz takibi ve puanlama</p>
+                  </div>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <span className="font-semibold">3.</span>
+                  <div>
+                    <span className="font-semibold">En Çok Kur'an Okuma Yarışması:</span>
+                    <p className="text-sm">Günlük Kur'an-ı Kerim okuma ve puanlama</p>
+                  </div>
+                </li>
+              </ul>
+            </Card>
           </div>
           
           {/* Feature Cards */}
