@@ -7,11 +7,14 @@ import { cn } from "@/lib/utils";
 import { Upload, User, UserRound } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { saveUserData } from "@/data/tempStorage";
 
 export const RegisterForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [age, setAge] = useState("");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>("");
@@ -57,6 +60,16 @@ export const RegisterForm = () => {
       });
       return;
     }
+
+    // Geçici dosyaya kaydet
+    saveUserData(email, {
+      email,
+      age,
+      gender,
+      avatarPreview,
+      color: `hsl(${hue}, 70%, 60%)`,
+    });
+
     toast({
       title: "Başarılı",
       description: "Kayıt başarılı!",
@@ -88,23 +101,37 @@ export const RegisterForm = () => {
           required
         />
       </div>
-      <div className="space-y-2">
+      <div className="space-y-2 relative">
         <Input
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="Şifre"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
+        >
+          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+        </button>
       </div>
-      <div className="space-y-2">
+      <div className="space-y-2 relative">
         <Input
-          type="password"
+          type={showConfirmPassword ? "text" : "password"}
           placeholder="Şifreyi Tekrarla"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
+        <button
+          type="button"
+          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
+        >
+          {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+        </button>
       </div>
       <div className="space-y-2">
         <Input
