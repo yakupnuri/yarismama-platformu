@@ -32,3 +32,9 @@ export const saveUserData = (email: string, data: Partial<UserData>) => {
 export const getUserData = (email: string): UserData | null => {
   return tempStorage[email] || null;
 };
+
+// Yeni eklenen fonksiyon
+export const getAllUsersData = () => {
+  console.log("Tüm kullanıcı verileri:", tempStorage);
+  return tempStorage;
+};
