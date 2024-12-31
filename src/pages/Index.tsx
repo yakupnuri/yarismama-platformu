@@ -19,7 +19,7 @@ const Index = () => {
       try {
         const apiUrl = import.meta.env.PROD 
           ? 'https://your-production-api.com'
-          : 'http://localhost:5000';
+          : 'http://localhost:5001'; // Port numarasını 5001 olarak güncelledik
 
         const response = await fetch(`${apiUrl}/`);
         if (!response.ok) {
@@ -46,7 +46,6 @@ const Index = () => {
             variant: "destructive",
           });
           
-          // 3 saniye sonra tekrar dene
           setTimeout(() => {
             setRetryCount(prev => prev + 1);
           }, 3000);
@@ -61,7 +60,7 @@ const Index = () => {
     };
 
     checkDbConnection();
-  }, [toast, retryCount]); // retryCount değiştiğinde useEffect yeniden çalışır
+  }, [toast, retryCount]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100">
