@@ -12,18 +12,18 @@ const Index = () => {
           <div className="relative w-64 h-64">
             <img
               src="/lovable-uploads/bd4ce9a5-8ce8-4795-a555-075047e7ab7d.png"
-              alt="Kinder Atlas Logo"
+              alt="Kaybedeni Olmayan Logo"
               className="w-full h-full object-contain rounded-full"
             />
           </div>
           
           {/* Main Content */}
           <div className="text-center space-y-6 max-w-2xl">
-            <h1 className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#30D5C8] to-[#87CEEB]">
-              Kinder Atlas
+            <h1 className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#F97316] to-[#0EA5E9]">
+              Kaybedeni Olmayan
             </h1>
             <p className="text-lg text-gray-600">
-              Çocuklar için eğlenceli ve eğitici bir dünya keşfi
+              Yarışma Bilgilendirme Platformu
             </p>
           </div>
 
@@ -34,19 +34,19 @@ const Index = () => {
           
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mt-12">
-            <Card className="p-6 bg-gradient-to-br from-[#FFD700]/10 to-[#FFD700]/5 border-[#FFD700]">
-              <h3 className="text-xl font-semibold text-[#FFD700]">Eğlenceli Öğrenme</h3>
-              <p className="mt-2 text-gray-600">İnteraktif oyunlar ve aktivitelerle öğrenme</p>
+            <Card className="p-6 bg-gradient-to-br from-[#F97316]/10 to-[#F97316]/5 border-[#F97316]">
+              <h3 className="text-xl font-semibold text-[#F97316]">Yarışma Detayları</h3>
+              <p className="mt-2 text-gray-600">Yarışma kuralları ve katılım şartları</p>
             </Card>
             
-            <Card className="p-6 bg-gradient-to-br from-[#87CEEB]/10 to-[#87CEEB]/5 border-[#87CEEB]">
-              <h3 className="text-xl font-semibold text-[#87CEEB]">Güvenli Ortam</h3>
-              <p className="mt-2 text-gray-600">Çocuklar için özel tasarlanmış güvenli platform</p>
+            <Card className="p-6 bg-gradient-to-br from-[#0EA5E9]/10 to-[#0EA5E9]/5 border-[#0EA5E9]">
+              <h3 className="text-xl font-semibold text-[#0EA5E9]">Ödüller</h3>
+              <p className="mt-2 text-gray-600">Kazananlara verilecek ödüller</p>
             </Card>
             
-            <Card className="p-6 bg-gradient-to-br from-[#DDA0DD]/10 to-[#DDA0DD]/5 border-[#DDA0DD]">
-              <h3 className="text-xl font-semibold text-[#DDA0DD]">Ebeveyn Kontrolü</h3>
-              <p className="mt-2 text-gray-600">Gelişim takibi ve ebeveyn yönetim paneli</p>
+            <Card className="p-6 bg-gradient-to-br from-[#9b87f5]/10 to-[#9b87f5]/5 border-[#9b87f5]">
+              <h3 className="text-xl font-semibold text-[#9b87f5]">Başvuru</h3>
+              <p className="mt-2 text-gray-600">Yarışmaya başvuru süreci</p>
             </Card>
           </div>
         </div>
