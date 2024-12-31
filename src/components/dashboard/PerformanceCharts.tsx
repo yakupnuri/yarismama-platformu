@@ -35,18 +35,27 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
     tick: { fill: '#94a3b8' }
   };
 
+  // Define gradient colors for bars
+  const gradientColors = [
+    "#8B5CF6", // Vivid Purple
+    "#D946EF", // Magenta Pink
+    "#F97316", // Bright Orange
+    "#0EA5E9", // Ocean Blue
+  ];
+
   return (
     <div className="grid grid-cols-1 gap-4">
-      <Card className="bg-[#FEF7CD] border-none shadow-sm">
+      <Card className="bg-white border-none shadow-sm hover:shadow-md transition-all duration-300">
         <CardHeader className="p-3">
-          <CardTitle className="text-sm font-medium text-gray-700">
+          <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
+            <Trophy className="w-4 h-4 text-[#40E0D0]" />
             Aylık Performansın
           </CardTitle>
         </CardHeader>
         <CardContent className="p-3">
           <ChartContainer config={chartConfig}>
             <BarChart data={weeklyData} {...commonChartProps}>
-              <CartesianGrid vertical={false} horizontal={false} />
+              <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis 
                 dataKey="name" 
                 {...commonAxisProps}
@@ -61,24 +70,25 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
               />
               <Bar 
                 dataKey="puan" 
-                fill={userColor || "#94a3b8"}
-                radius={[2, 2, 0, 0]}
+                fill={gradientColors[0]}
+                radius={[4, 4, 0, 0]}
               />
             </BarChart>
           </ChartContainer>
         </CardContent>
       </Card>
 
-      <Card className="bg-[#FDE1D3] border-none shadow-sm">
+      <Card className="bg-white border-none shadow-sm hover:shadow-md transition-all duration-300">
         <CardHeader className="p-3">
-          <CardTitle className="text-sm font-medium text-gray-700">
+          <CardTitle className="text-sm font-medium text-gray-700 flex items-center gap-2">
+            <Trophy className="w-4 h-4 text-[#40E0D0]" />
             Haftalık Performansın
           </CardTitle>
         </CardHeader>
         <CardContent className="p-3">
           <ChartContainer config={chartConfig}>
             <BarChart data={monthlyData} {...commonChartProps}>
-              <CartesianGrid vertical={false} horizontal={false} />
+              <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis 
                 dataKey="name" 
                 {...commonAxisProps}
@@ -93,8 +103,8 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
               />
               <Bar 
                 dataKey="puan" 
-                fill={userColor || "#94a3b8"}
-                radius={[2, 2, 0, 0]}
+                fill={gradientColors[2]}
+                radius={[4, 4, 0, 0]}
               />
             </BarChart>
           </ChartContainer>
