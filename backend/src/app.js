@@ -16,8 +16,14 @@ app.use(express.json());
 
 // MongoDB Bağlantısı
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB bağlantısı başarılı'))
-  .catch((err) => console.error('MongoDB bağlantı hatası:', err));
+  .then(() => {
+    console.log('MongoDB bağlantısı başarılı');
+    console.log('Bağlantı URI:', process.env.MONGODB_URI);
+  })
+  .catch((err) => {
+    console.error('MongoDB bağlantı hatası:', err);
+    process.exit(1); // Bağlantı başarısız olursa uygulamayı sonlandır
+  });
 
 // Ana route
 app.get('/', (req, res) => {
