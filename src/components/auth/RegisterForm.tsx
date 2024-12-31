@@ -2,18 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Baby, Cat, Dog, Rabbit, Squirrel } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const avatars = [
-  { icon: Baby, label: "Bebek" },
-  { icon: Cat, label: "Kedi" },
-  { icon: Dog, label: "Köpek" },
-  { icon: Rabbit, label: "Tavşan" },
-  { icon: Squirrel, label: "Sincap" },
-];
+import { Upload } from "lucide-react";
 
 const colors = [
   { value: "#F2FCE2", label: "Açık Yeşil" },
@@ -21,6 +12,13 @@ const colors = [
   { value: "#FEC6A1", label: "Açık Turuncu" },
   { value: "#E5DEFF", label: "Açık Mor" },
   { value: "#FFDEE2", label: "Açık Pembe" },
+  { value: "#FDE1D3", label: "Açık Şeftali" },
+  { value: "#D3E4FD", label: "Açık Mavi" },
+  { value: "#F1F0FB", label: "Açık Gri" },
+  { value: "#8B5CF6", label: "Canlı Mor" },
+  { value: "#D946EF", label: "Magenta Pembe" },
+  { value: "#F97316", label: "Parlak Turuncu" },
+  { value: "#0EA5E9", label: "Okyanus Mavisi" }
 ];
 
 export const RegisterForm = () => {
@@ -28,9 +26,30 @@ export const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [age, setAge] = useState("");
-  const [selectedAvatar, setSelectedAvatar] = useState("");
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState(colors[0].value);
   const { toast } = useToast();
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        toast({
+          title: "Hata",
+          description: "Dosya boyutu 5MB'dan küçük olmalıdır!",
+          variant: "destructive",
+        });
+        return;
+      }
+      setAvatarFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +61,7 @@ export const RegisterForm = () => {
       });
       return;
     }
-    if (!age || !selectedAvatar || !selectedColor) {
+    if (!age || !selectedColor || !avatarFile) {
       toast({
         title: "Hata",
         description: "Lütfen tüm alanları doldurun!",
@@ -98,53 +117,69 @@ export const RegisterForm = () => {
       </div>
 
       <div className="space-y-4">
-        <Label>Avatar Seç</Label>
-        <div className="grid grid-cols-3 gap-4">
-          {avatars.map(({ icon: Icon, label }) => (
-            <div
-              key={label}
-              className={cn(
-                "flex flex-col items-center p-2 border rounded-lg cursor-pointer transition-all",
-                selectedAvatar === label
-                  ? "border-primary bg-primary/10"
-                  : "border-input hover:border-primary/50"
-              )}
-              onClick={() => setSelectedAvatar(label)}
-            >
-              <Icon className="w-12 h-12 mb-2" />
-              <span className="text-sm">{label}</span>
+        <Label>Senin Avatarın</Label>
+        <div className="flex flex-col items-center space-y-4">
+          {avatarPreview ? (
+            <div className="relative w-32 h-32">
+              <img
+                src={avatarPreview}
+                alt="Avatar önizleme"
+                className="w-full h-full object-cover rounded-full"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setAvatarFile(null);
+                  setAvatarPreview("");
+                }}
+                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+              >
+                ×
+              </button>
             </div>
-          ))}
+          ) : (
+            <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center">
+              <Upload className="w-8 h-8 text-gray-400" />
+            </div>
+          )}
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={handleAvatarChange}
+            className="hidden"
+            id="avatar-upload"
+            required
+          />
+          <Label
+            htmlFor="avatar-upload"
+            className="cursor-pointer bg-secondary hover:bg-secondary/80 text-secondary-foreground px-4 py-2 rounded-md"
+          >
+            Avatar Yükle
+          </Label>
         </div>
       </div>
 
       <div className="space-y-4">
-        <Label>Renk Seç</Label>
-        <RadioGroup
-          value={selectedColor}
-          onValueChange={setSelectedColor}
-          className="grid grid-cols-5 gap-2"
-        >
+        <Label>Senin Rengin Ne?</Label>
+        <div className="grid grid-cols-4 gap-3">
           {colors.map(({ value, label }) => (
-            <div key={value} className="flex items-center space-x-2">
-              <RadioGroupItem
-                value={value}
-                id={value}
-                className="peer sr-only"
+            <div
+              key={value}
+              className="flex flex-col items-center space-y-2"
+              onClick={() => setSelectedColor(value)}
+            >
+              <div
+                className={cn(
+                  "w-12 h-12 rounded-full cursor-pointer transition-all border-4",
+                  selectedColor === value ? "border-primary" : "border-transparent"
+                )}
+                style={{ backgroundColor: value }}
+                title={label}
               />
-              <Label
-                htmlFor={value}
-                className="flex flex-col items-center space-y-2 peer-data-[state=checked]:ring-2 ring-primary rounded-md p-2 cursor-pointer"
-              >
-                <div
-                  className="w-8 h-8 rounded-full border"
-                  style={{ backgroundColor: value }}
-                />
-                <span className="text-xs text-center">{label}</span>
-              </Label>
+              <span className="text-xs text-center">{label}</span>
             </div>
           ))}
-        </RadioGroup>
+        </div>
       </div>
 
       <Button type="submit" className="w-full bg-[#90EE90] hover:bg-[#90EE90]/90">
