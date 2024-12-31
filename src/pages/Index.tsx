@@ -18,12 +18,12 @@ const Index = () => {
           </div>
           
           {/* Main Content */}
-          <div className="text-center space-y-6 max-w-2xl">
-            <h1 className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#F97316] to-[#0EA5E9]">
+          <div className="text-center space-y-6 max-w-3xl">
+            <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#F97316] to-[#0EA5E9]">
               Kaybedeni Olmayan
             </h1>
-            <p className="text-lg text-gray-600">
-              Yarışma Bilgilendirme Platformu
+            <p className="text-2xl md:text-3xl font-semibold text-gray-600">
+              Yarışma Platformu
             </p>
           </div>
 
