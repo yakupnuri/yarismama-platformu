@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { competitionActivities } from "@/data/competitionActivities";
 import { CompetitionSection } from "./forms/CompetitionSection";
 import { DailyTasksSection } from "./forms/DailyTasksSection";
 import { submitActivity } from "@/services/api";
@@ -42,9 +41,11 @@ export const ActivityForm = ({ userAge, onScoreUpdate }: ActivityFormProps) => {
       if (!userId) {
         toast({
           title: "Hata",
-          description: "Kullanıcı bilgisi bulunamadı!",
+          description: "Oturum süreniz dolmuş. Lütfen tekrar giriş yapın!",
           variant: "destructive",
         });
+        // Kullanıcıyı login sayfasına yönlendir
+        window.location.href = '/';
         return;
       }
 

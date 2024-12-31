@@ -22,7 +22,13 @@ router.post('/register', async (req, res) => {
     });
 
     await user.save();
-    res.status(201).json({ message: 'Kullanıcı başarıyla kaydedildi' });
+    res.status(201).json({ 
+      message: 'Kullanıcı başarıyla kaydedildi',
+      user: {
+        id: user._id,
+        email: user.email
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: 'Kayıt işlemi başarısız', error: error.message });
   }
@@ -43,6 +49,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Email veya şifre hatalı' });
     }
 
+    // Kullanıcı bilgilerini döndürürken ID'yi de ekleyelim
     res.json({
       message: 'Giriş başarılı',
       user: {

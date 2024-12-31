@@ -20,7 +20,7 @@ export const RegisterForm = () => {
   const [gender, setGender] = useState<string>("");
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       toast({
@@ -39,21 +39,54 @@ export const RegisterForm = () => {
       return;
     }
 
-    saveUserData(email, {
-      email,
-      age,
-      gender,
-      avatarPreview,
-      color: `hsl(${hue}, 70%, 60%)`,
-    });
+    try {
+      const response = await fetch('http://localhost:3001/api/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          age,
+          gender,
+          color: `hsl(${hue}, 70%, 60%)`,
+        }),
+      });
 
-    // Kullanıcı email'ini localStorage'a kaydet
-    localStorage.setItem("userEmail", email);
+      const data = await response.json();
 
-    toast({
-      title: "Başarılı",
-      description: "Kayıt başarılı!",
-    });
+      if (response.ok) {
+        // Kullanıcı verilerini localStorage'a kaydet
+        localStorage.setItem("userId", data.user.id);
+        localStorage.setItem("userEmail", email);
+
+        saveUserData(email, {
+          email,
+          age,
+          gender,
+          avatarPreview,
+          color: `hsl(${hue}, 70%, 60%)`,
+        });
+
+        toast({
+          title: "Başarılı",
+          description: "Kayıt başarılı!",
+        });
+      } else {
+        toast({
+          title: "Hata",
+          description: data.message || "Kayıt işlemi başarısız!",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Hata",
+        description: "Bir hata oluştu. Lütfen tekrar deneyin.",
+        variant: "destructive",
+      });
+    }
   };
 
   const selectedColor = `hsl(${hue}, 70%, 60%)`;
