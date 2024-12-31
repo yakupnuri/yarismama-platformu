@@ -1,5 +1,6 @@
 interface UserData {
   email: string;
+  username: string;
   age: string;
   gender: string;
   avatarPreview: string;
@@ -16,6 +17,7 @@ interface UserData {
 const tempStorage: { [key: string]: UserData } = {
   "test@test.com": {
     email: "test@test.com",
+    username: "test",
     age: "5",
     gender: "kiz",
     avatarPreview: "",
@@ -29,6 +31,7 @@ export const saveUserData = (email: string, data: Partial<UserData>) => {
   if (!tempStorage[email]) {
     tempStorage[email] = {
       email,
+      username: "",
       age: "",
       gender: "",
       avatarPreview: "",
@@ -49,6 +52,7 @@ export const getAllUsersData = () => {
   console.log("Tüm kullanıcı verileri:", tempStorage);
   const users = Object.values(tempStorage).map(user => ({
     email: user.email,
+    username: user.username,
     age: user.age,
     gender: user.gender
   }));
