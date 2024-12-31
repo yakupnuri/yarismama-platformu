@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Trophy, Star, Book, Heart, Mosque, PrayingHands } from "lucide-react";
+import { Trophy, Star, Book, Heart, Home, BookOpen } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -17,10 +17,10 @@ export const DailyActivities = ({ userAge }: DailyActivitiesProps) => {
   const { toast } = useToast();
 
   const competitionActivities = [
-    { id: "mosque", name: "En Güzel Cami Maketi Yarışması", points: 5, icon: <Mosque className="w-5 h-5" /> },
-    { id: "prayer", name: "En Çok Namaz Kılma Yarışması", points: 5, icon: <PrayingHands className="w-5 h-5" /> },
+    { id: "mosque", name: "En Güzel Cami Maketi Yarışması", points: 5, icon: <Home className="w-5 h-5" /> },
+    { id: "prayer", name: "En Çok Namaz Kılma Yarışması", points: 5, icon: <Star className="w-5 h-5" /> },
     { id: "quran", name: "En Çok Kur'an Okuma Yarışması", points: 4, icon: <Book className="w-5 h-5" /> },
-    { id: "memorize", name: "En Çok Sure Ezberleme Yarışması", points: 3, icon: <Star className="w-5 h-5" /> },
+    { id: "memorize", name: "En Çok Sure Ezberleme Yarışması", points: 3, icon: <BookOpen className="w-5 h-5" /> },
   ];
 
   const checkboxActivities = [
