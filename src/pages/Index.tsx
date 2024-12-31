@@ -1,8 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { AuthTabs } from "@/components/auth/AuthTabs";
+import { CompetitionDetailsModal } from "@/components/CompetitionDetailsModal";
+import { useState } from "react";
 
 const Index = () => {
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100">
       {/* Hero Section */}
@@ -37,7 +41,10 @@ const Index = () => {
           
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl mt-12">
-            <Card className="p-6 bg-gradient-to-br from-[#9b87f5]/10 to-[#9b87f5]/5 border-[#9b87f5]">
+            <Card 
+              className="p-6 bg-gradient-to-br from-[#9b87f5]/10 to-[#9b87f5]/5 border-[#9b87f5] cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02]"
+              onClick={() => setShowDetailsModal(true)}
+            >
               <h3 className="text-xl font-semibold text-[#9b87f5]">Yarışma Detayları</h3>
               <p className="mt-2 text-gray-600">Yarışma kuralları ve katılım şartları</p>
             </Card>
@@ -49,6 +56,11 @@ const Index = () => {
           </div>
         </div>
       </div>
+
+      <CompetitionDetailsModal 
+        open={showDetailsModal} 
+        onOpenChange={setShowDetailsModal}
+      />
     </div>
   );
 };
