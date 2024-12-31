@@ -113,11 +113,10 @@ const Dashboard = () => {
                       </div>
                       <Progress 
                         value={(user.points / 500) * 100} 
-                        className="h-2" 
-                        indicatorClassName="transition-all"
+                        className="h-2"
                         style={{ 
-                          ['--tw-progress-fill' as string]: user.color 
-                        }} 
+                          '--progress-background': user.color
+                        } as React.CSSProperties}
                       />
                     </div>
                   ))}
