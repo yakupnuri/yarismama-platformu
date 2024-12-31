@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Upload } from "lucide-react";
+import { Upload, User, UserRound } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -49,7 +49,7 @@ export const RegisterForm = () => {
       });
       return;
     }
-    if (!age || !avatarFile || !gender) {
+    if (!age || !gender) {
       toast({
         title: "Hata",
         description: "Lütfen tüm alanları doldurun!",
@@ -64,6 +64,18 @@ export const RegisterForm = () => {
   };
 
   const selectedColor = `hsl(${hue}, 70%, 60%)`;
+
+  const getDefaultAvatar = () => {
+    if (!avatarFile) {
+      if (gender === "kiz") {
+        return <UserRound className="w-16 h-16" style={{ color: selectedColor }} />;
+      } else if (gender === "erkek") {
+        return <User className="w-16 h-16" style={{ color: selectedColor }} />;
+      }
+      return <Upload className="w-8 h-8" style={{ color: selectedColor }} />;
+    }
+    return null;
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-sm">
@@ -107,7 +119,7 @@ export const RegisterForm = () => {
       </div>
 
       <div className="space-y-4">
-        <Label>Kendini nasıl tanımlıyorsun?</Label>
+        <Label>Cinsiyetin</Label>
         <RadioGroup
           onValueChange={setGender}
           className="flex flex-col space-y-2"
@@ -120,10 +132,6 @@ export const RegisterForm = () => {
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="erkek" id="erkek" />
             <Label htmlFor="erkek" className="cursor-pointer">Erkek</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="other" id="other" />
-            <Label htmlFor="other" className="cursor-pointer">Söylemek İstemiyorum</Label>
           </div>
         </RadioGroup>
       </div>
@@ -155,7 +163,7 @@ export const RegisterForm = () => {
               className="w-32 h-32 border-2 border-dashed rounded-full flex items-center justify-center"
               style={{ borderColor: selectedColor }}
             >
-              <Upload className="w-8 h-8" style={{ color: selectedColor }} />
+              {getDefaultAvatar()}
             </div>
           )}
           <Input
@@ -164,7 +172,6 @@ export const RegisterForm = () => {
             onChange={handleAvatarChange}
             className="hidden"
             id="avatar-upload"
-            required
           />
           <Label
             htmlFor="avatar-upload"
