@@ -53,10 +53,10 @@ export const IslamicDateDisplay = () => {
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+      <Card className="shadow-sm hover:shadow-md transition-shadow duration-300 border-[#F1F1F1]">
         <CardHeader className="space-y-1">
           <CardTitle className="text-xl flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-primary" />
+            <Calendar className="h-5 w-5 text-[#9b87f5]" />
             Yarışma Tarihleri
           </CardTitle>
         </CardHeader>
@@ -64,31 +64,31 @@ export const IslamicDateDisplay = () => {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="text-sm">
-                <span className="font-semibold">Başlangıç:</span>
+                <span className="font-semibold text-[#1A1F2C]">Başlangıç:</span>
                 <div className="mt-1">
-                  <div>1 Ocak 2025 Çarşamba</div>
-                  <div className="text-primary">{hijriMonths[startHijri.hm - 1]} {startHijri.hy}</div>
+                  <div className="text-[#8E9196]">1 Ocak 2025 Çarşamba</div>
+                  <div className="text-[#9b87f5]">{hijriMonths[startHijri.hm - 1]} {startHijri.hy}</div>
                 </div>
               </div>
               <div className="text-sm">
-                <span className="font-semibold">Bitiş:</span>
+                <span className="font-semibold text-[#1A1F2C]">Bitiş:</span>
                 <div className="mt-1">
-                  <div>31 Mart 2025 Pazar</div>
-                  <div className="text-primary">{hijriMonths[endHijri.hm - 1]} {endHijri.hy}</div>
+                  <div className="text-[#8E9196]">31 Mart 2025 Pazar</div>
+                  <div className="text-[#9b87f5]">{hijriMonths[endHijri.hm - 1]} {endHijri.hy}</div>
                 </div>
               </div>
             </div>
-            <div className="border-t pt-3 mt-2">
+            <div className="border-t border-[#F1F1F1] pt-3 mt-2">
               <div className="text-sm">
-                <span className="font-semibold">Bugün:</span>
+                <span className="font-semibold text-[#1A1F2C]">Bugün:</span>
                 <div className="mt-1">
-                  <div>{today.toLocaleDateString('tr-TR', { 
+                  <div className="text-[#8E9196]">{today.toLocaleDateString('tr-TR', { 
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
                   })}</div>
-                  <div className="text-primary">{hijriMonths[todayHijri.hm - 1]} {todayHijri.hy}</div>
+                  <div className="text-[#9b87f5]">{hijriMonths[todayHijri.hm - 1]} {todayHijri.hy}</div>
                 </div>
               </div>
             </div>
@@ -96,17 +96,17 @@ export const IslamicDateDisplay = () => {
         </CardContent>
       </Card>
 
-      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+      <Card className="shadow-sm hover:shadow-md transition-shadow duration-300 border-[#F1F1F1]">
         <CardHeader className="space-y-1">
           <CardTitle className="text-xl flex items-center gap-2">
-            <BookOpen className="h-5 w-5 text-primary" />
+            <BookOpen className="h-5 w-5 text-[#9b87f5]" />
             Günün Ayeti
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            <p className="text-sm italic">{currentVerse.verse}</p>
-            <p className="text-xs text-primary font-medium">{currentVerse.reference}</p>
+            <p className="text-sm italic text-[#8E9196]">{currentVerse.verse}</p>
+            <p className="text-xs text-[#9b87f5] font-medium">{currentVerse.reference}</p>
           </div>
         </CardContent>
       </Card>

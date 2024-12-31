@@ -90,30 +90,30 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 py-12 px-4">
+    <div className="min-h-screen bg-[#FFFFFF] py-8 px-4">
       <div className="container mx-auto max-w-6xl">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-6">
             <img
               src="/lovable-uploads/acd36c23-c6bb-40b7-9f7c-e255f13c9779.png"
               alt="Atlas Kinder Logo"
-              className="h-32 w-auto" // Updated height to match score card
+              className="h-28 w-auto"
             />
-            <h1 className="text-2xl font-bold text-gray-800">
+            <h1 className="text-2xl font-bold text-[#1A1F2C]">
               Yarışma Takip Sistemi
             </h1>
           </div>
           <div className="flex items-center gap-6">
             <motion.div 
-              className="flex flex-col items-end gap-1 bg-gradient-to-r from-[#F2FCE2] to-[#FFDEE2] p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-              whileHover={{ scale: 1.05 }}
+              className="flex flex-col items-end gap-1 bg-white p-4 rounded-xl shadow-sm border border-[#F1F1F1]"
+              whileHover={{ scale: 1.02 }}
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="text-sm text-gray-600 font-medium">Yaş: {userAge}</div>
+              <div className="text-sm text-[#8E9196] font-medium">Yaş: {userAge}</div>
               <div className="flex items-center gap-3">
-                <Crown className="w-6 h-6 text-yellow-500 animate-pulse" />
+                <Crown className="w-6 h-6 text-[#9b87f5]" />
                 <Trophy 
                   className="w-8 h-8 transform transition-all duration-300 hover:scale-110" 
                   style={{ color: userColor }} 
@@ -124,32 +124,25 @@ const Dashboard = () => {
                   color={userColor}
                 />
               </div>
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="text-xs text-[#8E9196] mt-1">
                 Toplam Puan
               </div>
             </motion.div>
             <div className="relative">
-              <Avatar className="h-12 w-12 ring-2 ring-offset-2 transition-all duration-300 hover:ring-4" style={{ borderColor: userColor }}>
+              <Avatar className="h-12 w-12 ring-2 ring-offset-2 transition-all duration-300 hover:ring-4" 
+                     style={{ borderColor: userColor }}>
                 {userAvatar ? (
                   <AvatarImage src={userAvatar} alt="Kullanıcı avatarı" />
                 ) : (
-                  <AvatarFallback>
+                  <AvatarFallback className="bg-[#9b87f5] text-white">
                     {currentUserEmail.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 )}
               </Avatar>
-              <div 
-                className="absolute inset-0 rounded-full -m-1"
-                style={{ 
-                  border: `2px solid ${userColor}`,
-                  content: '""'
-                }}
-              />
             </div>
           </div>
         </div>
 
-        {/* Add IslamicDateDisplay before the main grid */}
         <div className="mb-8">
           <IslamicDateDisplay />
         </div>
@@ -163,10 +156,10 @@ const Dashboard = () => {
               userColor={userColor}
             />
 
-            <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <Card className="shadow-sm hover:shadow-md transition-shadow duration-300 border-[#F1F1F1]">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Star className="w-6 h-6 text-primary" />
+                  <Star className="w-6 h-6 text-[#9b87f5]" />
                   Genel Sıralama (4-8 Yaş Grubu)
                 </CardTitle>
               </CardHeader>
@@ -175,8 +168,8 @@ const Dashboard = () => {
                   {rankings.map((user, index) => (
                     <div key={index} className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span className="font-medium">{user.name}</span>
-                        <span className="text-primary font-bold">{user.points} puan</span>
+                        <span className="font-medium text-[#1A1F2C]">{user.name}</span>
+                        <span className="text-[#9b87f5] font-bold">{user.points} puan</span>
                       </div>
                       <Progress 
                         value={(user.points / 500) * 100} 
