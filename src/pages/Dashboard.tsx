@@ -11,12 +11,36 @@ const Dashboard = () => {
   const { toast } = useToast();
   const [userAge, setUserAge] = useState<string>("");
   const [userColor, setUserColor] = useState<string>("hsl(var(--primary))");
+  const [rankings, setRankings] = useState<Array<{name: string, points: number, color: string}>>([]);
 
   useEffect(() => {
     const userData = getUserData(localStorage.getItem("userEmail") || "");
     if (userData) {
       setUserAge(userData.age);
       setUserColor(userData.color || "hsl(var(--primary))");
+
+      // Simüle edilmiş kullanıcı verileri
+      const ahmetData = getUserData("ahmet@example.com");
+      const ayseData = getUserData("ayse@example.com");
+      const mehmetData = getUserData("mehmet@example.com");
+
+      setRankings([
+        { 
+          name: "Ahmet", 
+          points: 450, 
+          color: ahmetData?.color || "hsl(265, 70%, 60%)" // Varsayılan mor
+        },
+        { 
+          name: "Ayşe", 
+          points: 400, 
+          color: ayseData?.color || "hsl(330, 70%, 60%)" // Varsayılan pembe
+        },
+        { 
+          name: "Mehmet", 
+          points: 350, 
+          color: mehmetData?.color || "hsl(200, 70%, 60%)" // Varsayılan mavi
+        }
+      ]);
     }
   }, []);
 
@@ -81,27 +105,22 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="font-medium">Ahmet</span>
-                      <span className="text-primary font-bold">450 puan</span>
+                  {rankings.map((user, index) => (
+                    <div key={index} className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="font-medium">{user.name}</span>
+                        <span className="text-primary font-bold">{user.points} puan</span>
+                      </div>
+                      <Progress 
+                        value={(user.points / 500) * 100} 
+                        className="h-2" 
+                        indicatorClassName="transition-all"
+                        style={{ 
+                          ['--tw-progress-fill' as string]: user.color 
+                        }} 
+                      />
                     </div>
-                    <Progress value={90} className="h-2" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="font-medium">Ayşe</span>
-                      <span className="text-primary font-bold">400 puan</span>
-                    </div>
-                    <Progress value={80} className="h-2" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="font-medium">Mehmet</span>
-                      <span className="text-primary font-bold">350 puan</span>
-                    </div>
-                    <Progress value={70} className="h-2" />
-                  </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
