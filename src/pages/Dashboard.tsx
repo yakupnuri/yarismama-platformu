@@ -11,7 +11,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
-import { Trophy, Star, Book, Heart, PrayingHands, Mosque } from "lucide-react";
+import { Trophy, Star, Book, Heart, Bookmark, CircleUser } from "lucide-react";
 
 const Dashboard = () => {
   const [selectedActivity, setSelectedActivity] = useState("");
@@ -25,9 +25,9 @@ const Dashboard = () => {
   ];
 
   const activities8_10 = [
-    { id: "namaz", name: "Namaz Kılma", points: 5, icon: <PrayingHands className="w-5 h-5" /> },
+    { id: "namaz", name: "Namaz Kılma", points: 5, icon: <CircleUser className="w-5 h-5" /> },
     { id: "kuran", name: "Kur'an Okuma", points: 4, icon: <Book className="w-5 h-5" /> },
-    { id: "sure", name: "Sure Ezberleme", points: 3, icon: <Mosque className="w-5 h-5" /> },
+    { id: "sure", name: "Sure Ezberleme", points: 3, icon: <Bookmark className="w-5 h-5" /> },
   ];
 
   const chartData = [
@@ -39,6 +39,12 @@ const Dashboard = () => {
     { name: "Cumartesi", puan: 28 },
     { name: "Pazar", puan: 32 },
   ];
+
+  const chartConfig = {
+    puan: {
+      color: "hsl(var(--primary))",
+    },
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
