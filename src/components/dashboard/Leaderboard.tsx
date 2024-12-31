@@ -2,22 +2,28 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Crown } from "lucide-react";
-import axios from 'axios';
+import { useToast } from "@/hooks/use-toast";
+
+interface Ranking {
+  name: string;
+  points: number;
+}
 
 const Leaderboard = ({ className = '' }) => {
-  const [rankings, setRankings] = useState<Array<{name: string, points: number}>>([]);
+  const [rankings, setRankings] = useState<Ranking[]>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
-    const fetchRankings = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/api/rankings');
-        setRankings(response.data);
-      } catch (error) {
-        console.error('Error fetching rankings:', error);
-      }
-    };
-
-    fetchRankings();
+    // For now, use mock data instead of API calls since backend is not ready
+    const mockRankings = [
+      { name: "Ahmet", points: 450 },
+      { name: "Ayşe", points: 400 },
+      { name: "Mehmet", points: 350 },
+      { name: "Fatma", points: 300 },
+      { name: "Ali", points: 250 }
+    ];
+    
+    setRankings(mockRankings);
   }, []);
 
   return (
