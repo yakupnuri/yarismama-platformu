@@ -28,17 +28,40 @@ mongoose.connect(process.env.MONGODB_URI, {
   process.exit(1);
 });
 
-// Ana route
+// Ana route - API durumunu kontrol etmek için
 app.get('/', (req, res) => {
-  res.json({ message: 'Yarışma API çalışıyor' });
+  res.json({ 
+    status: 'success',
+    message: 'Yarışma API çalışıyor',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// API durum kontrolü için yeni endpoint
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'success',
+    message: 'API sağlık kontrolü başarılı',
+    dbConnection: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Hata yönetimi middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ 
+    status: 'error',
     message: 'Sunucu hatası oluştu',
     error: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
+});
+
+// 404 handler - tanımlanmamış routelar için
+app.use((req, res) => {
+  res.status(404).json({
+    status: 'error',
+    message: 'İstenen sayfa bulunamadı'
   });
 });
 
