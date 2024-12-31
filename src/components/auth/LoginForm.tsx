@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import { getUserData } from "@/data/tempStorage";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +15,22 @@ export const LoginForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Test kullanıcısı için özel kontrol
     if (email === "test@test.com" && password === "password") {
+      localStorage.setItem("userEmail", email);
+      toast({
+        title: "Başarılı",
+        description: "Giriş yapıldı!",
+      });
+      navigate("/dashboard");
+      return;
+    }
+
+    // Diğer kayıtlı kullanıcılar için kontrol
+    const userData = getUserData(email);
+    if (userData) {
+      localStorage.setItem("userEmail", email);
       toast({
         title: "Başarılı",
         description: "Giriş yapıldı!",
