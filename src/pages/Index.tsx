@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { AuthTabs } from "@/components/auth/AuthTabs";
 
 const Index = () => {
   return (
@@ -24,21 +25,11 @@ const Index = () => {
             <p className="text-lg text-gray-600">
               Çocuklar için eğlenceli ve eğitici bir dünya keşfi
             </p>
-            
-            {/* Action Buttons */}
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button 
-                className="bg-[#90EE90] hover:bg-[#90EE90]/90 text-white"
-              >
-                Başla
-              </Button>
-              <Button 
-                variant="outline"
-                className="border-[#FA8072] text-[#FA8072] hover:bg-[#FA8072]/10"
-              >
-                Daha Fazla Bilgi
-              </Button>
-            </div>
+          </div>
+
+          {/* Auth Section */}
+          <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
+            <AuthTabs />
           </div>
           
           {/* Feature Cards */}
