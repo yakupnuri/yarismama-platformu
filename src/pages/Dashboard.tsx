@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Trophy, Star } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Trophy, Star, Book, Heart, Home, BookOpen } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { PerformanceCharts } from "@/components/dashboard/PerformanceCharts";
 import { DailyActivities } from "@/components/dashboard/DailyActivities";
 import { getUserData } from "@/data/tempStorage";
@@ -12,9 +12,21 @@ const Dashboard = () => {
   const [userAge, setUserAge] = useState<string>("");
   const [userColor, setUserColor] = useState<string>("hsl(var(--primary))");
   const [rankings, setRankings] = useState<Array<{name: string, points: number, color: string}>>([]);
+  const [currentUserEmail, setCurrentUserEmail] = useState<string>("");
 
   useEffect(() => {
-    const userData = getUserData(localStorage.getItem("userEmail") || "");
+    const userEmail = localStorage.getItem("userEmail");
+    if (!userEmail) {
+      toast({
+        title: "Hata",
+        description: "Lütfen önce giriş yapın!",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setCurrentUserEmail(userEmail);
+    const userData = getUserData(userEmail);
     if (userData) {
       setUserAge(userData.age);
       setUserColor(userData.color || "hsl(var(--primary))");
@@ -42,7 +54,7 @@ const Dashboard = () => {
         }
       ]);
     }
-  }, []);
+  }, [toast]);
 
   const weeklyData = [
     { name: "Pazartesi", puan: 20 },
@@ -67,7 +79,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <img
-              src="/atlas-kinder-logo.png"
+              src="/lovable-uploads/acd36c23-c6bb-40b7-9f7c-e255f13c9779.png"
               alt="Atlas Kinder Logo"
               className="h-16 w-auto"
             />
@@ -77,7 +89,7 @@ const Dashboard = () => {
           </div>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <p className="text-sm text-gray-600">Toplam Puanınız</p>
+              <p className="text-sm text-gray-600">Hoş geldin, {currentUserEmail}</p>
               <p className="text-2xl font-bold text-primary flex items-center gap-2">
                 <Trophy className="w-6 h-6" />
                 156

@@ -47,6 +47,9 @@ export const RegisterForm = () => {
       color: `hsl(${hue}, 70%, 60%)`,
     });
 
+    // Kullanıcı email'ini localStorage'a kaydet
+    localStorage.setItem("userEmail", email);
+
     toast({
       title: "Başarılı",
       description: "Kayıt başarılı!",
