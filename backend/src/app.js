@@ -7,23 +7,26 @@ const app = express();
 
 // CORS ayarları
 app.use(cors({
-  origin: '*', // Geliştirme aşamasında tüm originlere izin ver
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());
 
-// MongoDB Bağlantısı
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('MongoDB bağlantısı başarılı');
-    console.log('Bağlantı URI:', process.env.MONGODB_URI);
-  })
-  .catch((err) => {
-    console.error('MongoDB bağlantı hatası:', err);
-    process.exit(1); // Bağlantı başarısız olursa uygulamayı sonlandır
-  });
+// MongoDB Cloud Bağlantısı
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => {
+  console.log('MongoDB Cloud bağlantısı başarılı');
+  console.log('Bağlantı URI:', process.env.MONGODB_URI);
+})
+.catch((err) => {
+  console.error('MongoDB Cloud bağlantı hatası:', err);
+  process.exit(1);
+});
 
 // Ana route
 app.get('/', (req, res) => {
@@ -40,7 +43,7 @@ app.use((err, req, res, next) => {
 });
 
 // Port dinleme
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server ${PORT} portunda çalışıyor`);
 });
