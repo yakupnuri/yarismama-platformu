@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Trophy, Star, Book, Heart, Home, BookOpen, Upload } from "lucide-react";
+import { Trophy, Star, Book, Heart, Home, BookOpen } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { CompetitionActivity } from "./CompetitionActivity";
+import { CheckboxActivity } from "./CheckboxActivity";
 
 interface DailyActivitiesProps {
   userAge: string;
@@ -22,7 +22,7 @@ export const DailyActivities = ({ userAge }: DailyActivitiesProps) => {
       id: "mosque", 
       name: "En Güzel Cami Maketi Yarışması", 
       points: 5, 
-      icon: <Home className="w-5 h-5" />,
+      icon: Home,
       requiresImage: true,
       placeholder: "https://images.unsplash.com/photo-1466442929976-97f336a657be"
     },
@@ -30,26 +30,26 @@ export const DailyActivities = ({ userAge }: DailyActivitiesProps) => {
       id: "paradise", 
       name: "Hayalindeki Cennetin Resmini Yap Yarışması", 
       points: 5, 
-      icon: <Star className="w-5 h-5" />,
+      icon: Star,
       requiresImage: true
     },
     { 
       id: "prayer", 
       name: "En Çok Namaz Kılma Yarışması", 
       points: 5, 
-      icon: <Star className="w-5 h-5" /> 
+      icon: Star
     },
     { 
       id: "quran", 
       name: "En Çok Kur'an Okuma Yarışması", 
       points: 4, 
-      icon: <Book className="w-5 h-5" /> 
+      icon: Book
     },
     { 
       id: "memorize", 
       name: "En Çok Sure Ezberleme Yarışması", 
       points: 3, 
-      icon: <BookOpen className="w-5 h-5" /> 
+      icon: BookOpen
     },
   ];
 
@@ -121,112 +121,45 @@ export const DailyActivities = ({ userAge }: DailyActivitiesProps) => {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {competitionActivities.map((activity) => (
-            <div
+            <CompetitionActivity
               key={activity.id}
-              className={`flex items-center justify-between p-4 rounded-lg transition-all duration-200 ${
-                selectedActivity === activity.id
-                  ? "bg-primary/10 border-2 border-primary"
-                  : "bg-orange-50 hover:bg-orange-100 border-2 border-transparent"
-              } cursor-pointer`}
-              onClick={() => setSelectedActivity(activity.id)}
-            >
-              <div className="flex items-center gap-3">
-                {activity.icon}
-                <div>
-                  <h4 className="font-medium">{activity.name}</h4>
-                  <p className="text-sm text-gray-600">
-                    {activity.points} puan
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                {activity.requiresImage && (
-                  <div className="relative">
-                    {uploadedImages[activity.id] ? (
-                      <div className="relative w-16 h-16">
-                        <img
-                          src={uploadedImages[activity.id]}
-                          alt={`${activity.name} resmi`}
-                          className="w-16 h-16 object-cover rounded-lg"
-                        />
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setUploadedImages(prev => {
-                              const newImages = { ...prev };
-                              delete newImages[activity.id];
-                              return newImages;
-                            });
-                          }}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 text-xs"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ) : (
-                      <>
-                        <label
-                          htmlFor={`image-${activity.id}`}
-                          className="cursor-pointer block w-16 h-16 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center hover:border-primary transition-colors"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {activity.placeholder ? (
-                            <img
-                              src={activity.placeholder}
-                              alt="Örnek resim"
-                              className="w-full h-full object-cover rounded-lg opacity-50"
-                            />
-                          ) : (
-                            <Upload className="w-6 h-6 text-gray-400" />
-                          )}
-                        </label>
-                        <input
-                          type="file"
-                          id={`image-${activity.id}`}
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => handleImageUpload(activity.id, e)}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      </>
-                    )}
-                  </div>
-                )}
-                {!activity.requiresImage && (
-                  <Input
-                    type="number"
-                    min="0"
-                    className="w-24"
-                    value={selectedActivity === activity.id ? activityValue : ""}
-                    onChange={(e) => setActivityValue(e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                )}
-              </div>
-            </div>
+              id={activity.id}
+              name={activity.name}
+              points={activity.points}
+              icon={activity.icon}
+              requiresImage={activity.requiresImage}
+              placeholder={activity.placeholder}
+              selected={selectedActivity === activity.id}
+              activityValue={selectedActivity === activity.id ? activityValue : ""}
+              uploadedImage={uploadedImages[activity.id]}
+              onSelect={() => setSelectedActivity(activity.id)}
+              onValueChange={setActivityValue}
+              onImageUpload={(e) => handleImageUpload(activity.id, e)}
+              onImageRemove={() => {
+                setUploadedImages(prev => {
+                  const newImages = { ...prev };
+                  delete newImages[activity.id];
+                  return newImages;
+                });
+              }}
+            />
           ))}
 
           <div className="space-y-4 mt-6">
             {checkboxActivities.map((activity) => (
-              <div key={activity.id} className="flex items-center space-x-2">
-                <Checkbox
-                  id={activity.id}
-                  checked={checkedItems[activity.id] || false}
-                  onCheckedChange={(checked) => {
-                    setCheckedItems(prev => ({
-                      ...prev,
-                      [activity.id]: checked === true
-                    }));
-                  }}
-                />
-                <label
-                  htmlFor={activity.id}
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {activity.name} ({activity.points} puan)
-                </label>
-              </div>
+              <CheckboxActivity
+                key={activity.id}
+                id={activity.id}
+                name={activity.name}
+                points={activity.points}
+                checked={checkedItems[activity.id] || false}
+                onCheckedChange={(checked) => {
+                  setCheckedItems(prev => ({
+                    ...prev,
+                    [activity.id]: checked === true
+                  }));
+                }}
+              />
             ))}
           </div>
 
