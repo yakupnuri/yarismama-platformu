@@ -19,7 +19,7 @@ const Index = () => {
       try {
         const apiUrl = import.meta.env.PROD 
           ? 'https://your-production-api.com'
-          : 'http://localhost:3000'; // Port numarasını 3000 olarak güncelledik
+          : 'http://localhost:3001'; // Port numarasını 3001 olarak güncelledik
 
         const response = await fetch(`${apiUrl}/`);
         if (!response.ok) {
