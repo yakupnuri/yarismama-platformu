@@ -33,8 +33,13 @@ export const getUserData = (email: string): UserData | null => {
   return tempStorage[email] || null;
 };
 
-// Yeni eklenen fonksiyon
 export const getAllUsersData = () => {
   console.log("Tüm kullanıcı verileri:", tempStorage);
+  const users = Object.values(tempStorage).map(user => ({
+    email: user.email,
+    age: user.age,
+    gender: user.gender
+  }));
+  console.log("Kayıtlı kullanıcılar:", users);
   return tempStorage;
 };
