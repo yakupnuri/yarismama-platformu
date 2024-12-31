@@ -26,6 +26,11 @@ const quranVerses = [
   }
 ];
 
+const hijriMonths = [
+  "Muharrem", "Safer", "Rebiülevvel", "Rebiülahir", "Cemaziyelevvel", "Cemaziyelahir",
+  "Recep", "Şaban", "Ramazan", "Şevval", "Zilkade", "Zilhicce"
+];
+
 export const IslamicDateDisplay = () => {
   const [currentVerse, setCurrentVerse] = useState(quranVerses[0]);
   const startDate = new Date(2025, 0, 1); // 1 Ocak 2025
@@ -38,7 +43,9 @@ export const IslamicDateDisplay = () => {
   useEffect(() => {
     // Her gün farklı bir ayet göster
     const today = new Date();
-    const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+    const start = new Date(today.getFullYear(), 0, 0);
+    const diff = Number(today) - Number(start);
+    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
     const verseIndex = dayOfYear % quranVerses.length;
     setCurrentVerse(quranVerses[verseIndex]);
   }, []);
@@ -58,14 +65,14 @@ export const IslamicDateDisplay = () => {
               <span className="font-semibold">Başlangıç:</span>
               <div className="ml-4">
                 <div>1 Ocak 2025 Çarşamba</div>
-                <div className="text-primary">{startHijri.monthName} {startHijri.hy}</div>
+                <div className="text-primary">{hijriMonths[startHijri.hm - 1]} {startHijri.hy}</div>
               </div>
             </div>
             <div className="text-sm">
               <span className="font-semibold">Bitiş:</span>
               <div className="ml-4">
                 <div>31 Mart 2025 Pazar</div>
-                <div className="text-primary">{endHijri.monthName} {endHijri.hy}</div>
+                <div className="text-primary">{hijriMonths[endHijri.hm - 1]} {endHijri.hy}</div>
               </div>
             </div>
           </div>
