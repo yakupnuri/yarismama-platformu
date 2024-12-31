@@ -12,7 +12,16 @@ interface UserData {
   }[];
 }
 
-const tempStorage: { [key: string]: UserData } = {};
+const tempStorage: { [key: string]: UserData } = {
+  "test@test.com": {
+    email: "test@test.com",
+    age: "5",
+    gender: "kiz",
+    avatarPreview: "",
+    color: "#8B5CF6", // Vivid purple color from the palette
+    activities: [],
+  }
+};
 
 export const saveUserData = (email: string, data: Partial<UserData>) => {
   if (!tempStorage[email]) {
