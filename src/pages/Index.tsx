@@ -13,7 +13,7 @@ const Index = () => {
             <img
               src="/lovable-uploads/bd4ce9a5-8ce8-4795-a555-075047e7ab7d.png"
               alt="Kinder Atlas Logo"
-              className="w-full h-full object-contain rounded-3xl"
+              className="w-full h-full object-contain rounded-full"
             />
           </div>
           
