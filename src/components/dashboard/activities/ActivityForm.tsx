@@ -4,6 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { CompetitionActivity } from "../CompetitionActivity";
 import { CheckboxActivity } from "../CheckboxActivity";
 import { competitionActivities } from "@/data/competitionActivities";
+import { Heart } from "lucide-react";
 
 interface ActivityFormProps {
   userAge: string;
