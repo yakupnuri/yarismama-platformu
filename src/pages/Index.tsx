@@ -25,7 +25,7 @@ const Index = () => {
             <p className="text-2xl md:text-3xl font-semibold text-gray-600">
               Yarışma Platformu
             </p>
-            <h2 className="text-3xl font-bold text-gray-800 mt-8">
+            <h2 className="text-[14px] font-bold text-gray-800 mt-8">
               ÜÇ AYLAR ÇOCUKLAR İÇİN ÖDÜLLÜ YARIŞMA PROGRAMI
             </h2>
           </div>
