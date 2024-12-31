@@ -27,8 +27,8 @@ const quranVerses = [
 ];
 
 const hijriMonths = [
-  "Muharrem", "Safer", "Rebiülevvel", "Rebiülahir", "Cemaziyelevvel", "Cemaziyelahir",
-  "Recep", "Şaban", "Ramazan", "Şevval", "Zilkade", "Zilhicce"
+  "Muharrem", "Safer", "Rebîülevvel", "Rebîülâhir", "Cemâziyelevvel", "Cemâziyelâhir",
+  "Receb", "Şa'bân", "Ramazan", "Şevvâl", "Zilka'de", "Zilhicce"
 ];
 
 export const IslamicDateDisplay = () => {
