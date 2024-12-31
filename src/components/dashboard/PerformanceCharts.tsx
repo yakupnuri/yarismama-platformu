@@ -40,7 +40,7 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
       <Card className="bg-[#FEF7CD] border-none shadow-sm">
         <CardHeader className="p-3">
           <CardTitle className="text-sm font-medium text-gray-700">
-            Önceki Performansın
+            Aylık Performansın
           </CardTitle>
         </CardHeader>
         <CardContent className="p-3">
