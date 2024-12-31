@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Trophy, Star, Book, Heart, Home, BookOpen } from "lucide-react";
+import { Trophy, Star, Book, Heart, Home, BookOpen, Crown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { PerformanceCharts } from "@/components/dashboard/PerformanceCharts";
@@ -9,6 +9,7 @@ import { getUserData } from "@/data/tempStorage";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { AnimatedScore } from "@/components/dashboard/AnimatedScore";
+import { motion } from "framer-motion";
 
 const Dashboard = () => {
   const { toast } = useToast();
@@ -102,19 +103,32 @@ const Dashboard = () => {
             </h1>
           </div>
           <div className="flex items-center gap-6">
-            <div className="flex flex-col items-end gap-1">
-              <div className="text-sm text-gray-600">Yaş: {userAge}</div>
-              <div className="flex items-center gap-2">
-                <Trophy className="w-6 h-6" style={{ color: userColor }} />
+            <motion.div 
+              className="flex flex-col items-end gap-1 bg-gradient-to-r from-[#F2FCE2] to-[#FFDEE2] p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="text-sm text-gray-600 font-medium">Yaş: {userAge}</div>
+              <div className="flex items-center gap-3">
+                <Crown className="w-6 h-6 text-yellow-500 animate-pulse" />
+                <Trophy 
+                  className="w-8 h-8 transform transition-all duration-300 hover:scale-110" 
+                  style={{ color: userColor }} 
+                />
                 <AnimatedScore 
                   score={score} 
                   previousScore={previousScore}
                   color={userColor}
                 />
               </div>
-            </div>
+              <div className="text-xs text-gray-500 mt-1">
+                Toplam Puan
+              </div>
+            </motion.div>
             <div className="relative">
-              <Avatar className="h-12 w-12">
+              <Avatar className="h-12 w-12 ring-2 ring-offset-2 transition-all duration-300 hover:ring-4" style={{ ringColor: userColor }}>
                 {userAvatar ? (
                   <AvatarImage src={userAvatar} alt="Kullanıcı avatarı" />
                 ) : (
