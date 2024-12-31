@@ -3,9 +3,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trophy } from "lucide-react";
+import { getUserData } from "@/data/tempStorage";
 
 interface PerformanceChartsProps {
   weeklyData: any[];
@@ -35,13 +36,19 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
     tick: { fill: '#94a3b8' }
   };
 
-  // Define gradient colors for bars
-  const gradientColors = [
-    "#8B5CF6", // Vivid Purple
-    "#D946EF", // Magenta Pink
-    "#F97316", // Bright Orange
-    "#0EA5E9", // Ocean Blue
-  ];
+  // Transform data to include user colors
+  const transformDataWithColors = (data: any[]) => {
+    return data.map(item => {
+      const userData = getUserData(item.email);
+      return {
+        ...item,
+        fill: userData?.color || "#94a3b8" // Use user's selected color or fallback
+      };
+    });
+  };
+
+  const coloredWeeklyData = transformDataWithColors(weeklyData);
+  const coloredMonthlyData = transformDataWithColors(monthlyData);
 
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -54,7 +61,7 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
         </CardHeader>
         <CardContent className="p-3">
           <ChartContainer config={chartConfig}>
-            <BarChart data={weeklyData} {...commonChartProps}>
+            <BarChart data={coloredWeeklyData} {...commonChartProps}>
               <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis 
                 dataKey="name" 
@@ -69,10 +76,17 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
                 cursor={{ fill: 'transparent' }}
               />
               <Bar 
-                dataKey="puan" 
-                fill={gradientColors[0]}
+                dataKey="puan"
+                fill="#8B5CF6"
                 radius={[4, 4, 0, 0]}
-              />
+                fillOpacity={0.9}
+              >
+                {
+                  coloredWeeklyData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                  ))
+                }
+              </Bar>
             </BarChart>
           </ChartContainer>
         </CardContent>
@@ -87,7 +101,7 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
         </CardHeader>
         <CardContent className="p-3">
           <ChartContainer config={chartConfig}>
-            <BarChart data={monthlyData} {...commonChartProps}>
+            <BarChart data={coloredMonthlyData} {...commonChartProps}>
               <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis 
                 dataKey="name" 
@@ -102,10 +116,17 @@ export const PerformanceCharts = ({ weeklyData, monthlyData, userColor }: Perfor
                 cursor={{ fill: 'transparent' }}
               />
               <Bar 
-                dataKey="puan" 
-                fill={gradientColors[2]}
+                dataKey="puan"
+                fill="#F97316"
                 radius={[4, 4, 0, 0]}
-              />
+                fillOpacity={0.9}
+              >
+                {
+                  coloredMonthlyData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                  ))
+                }
+              </Bar>
             </BarChart>
           </ChartContainer>
         </CardContent>
