@@ -34,29 +34,33 @@ export const CompetitionActivity = ({
 }: CompetitionActivityProps) => {
   return (
     <div
-      className={`flex items-center justify-between p-4 rounded-lg transition-all duration-200 ${
+      className={`flex items-center justify-between p-4 rounded-xl transition-all duration-300 transform hover:scale-[1.02] cursor-pointer ${
         selected
-          ? "bg-primary/10 border-2 border-primary"
-          : "bg-orange-50 hover:bg-orange-100 border-2 border-transparent"
-      } cursor-pointer`}
+          ? "bg-gradient-to-r from-[#FEC6A1] to-[#FEF7CD] border-2 border-[#F97316] shadow-lg"
+          : "bg-white/80 hover:bg-white border-2 border-transparent hover:border-[#F97316]/20 shadow-md"
+      }`}
       onClick={onSelect}
     >
-      <div className="flex items-center gap-3">
-        <Icon className="w-5 h-5" />
+      <div className="flex items-center gap-4">
+        <div className={`p-3 rounded-full ${selected ? 'bg-[#F97316]/10' : 'bg-[#F97316]/5'}`}>
+          <Icon className={`w-6 h-6 ${selected ? 'text-[#F97316]' : 'text-[#F97316]/70'}`} />
+        </div>
         <div>
-          <h4 className="font-medium">{name}</h4>
-          <p className="text-sm text-gray-600">{points} puan</p>
+          <h4 className={`font-semibold text-lg ${selected ? 'text-[#F97316]' : 'text-gray-700'}`}>{name}</h4>
+          <p className="text-sm text-gray-600 flex items-center gap-1">
+            <span className="text-[#F97316] font-bold">{points}</span> puan kazanabilirsin! ⭐
+          </p>
         </div>
       </div>
       <div className="flex items-center gap-4">
         {requiresImage && (
           <div className="relative">
             {uploadedImage ? (
-              <div className="relative w-16 h-16">
+              <div className="relative w-20 h-20">
                 <img
                   src={uploadedImage}
                   alt={`${name} resmi`}
-                  className="w-16 h-16 object-cover rounded-lg"
+                  className="w-20 h-20 object-cover rounded-xl shadow-md"
                 />
                 <button
                   type="button"
@@ -64,7 +68,7 @@ export const CompetitionActivity = ({
                     e.stopPropagation();
                     onImageRemove?.();
                   }}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 text-xs"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 shadow-lg transition-colors"
                 >
                   ×
                 </button>
@@ -73,7 +77,7 @@ export const CompetitionActivity = ({
               <>
                 <label
                   htmlFor={`image-${id}`}
-                  className="cursor-pointer block w-16 h-16 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center hover:border-primary transition-colors"
+                  className="cursor-pointer block w-20 h-20 border-2 border-dashed border-[#F97316]/30 rounded-xl flex items-center justify-center hover:border-[#F97316] transition-colors bg-white/50 hover:bg-white"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {placeholder ? (
@@ -83,7 +87,7 @@ export const CompetitionActivity = ({
                       className="w-full h-full object-cover rounded-lg opacity-50"
                     />
                   ) : (
-                    <div className="w-6 h-6 text-gray-400">+</div>
+                    <div className="text-2xl text-[#F97316]/50 hover:text-[#F97316]">+</div>
                   )}
                 </label>
                 <input
@@ -102,7 +106,7 @@ export const CompetitionActivity = ({
           <Input
             type="number"
             min="0"
-            className="w-24"
+            className="w-24 border-2 focus:border-[#F97316] transition-colors"
             value={activityValue}
             onChange={(e) => onValueChange?.(e.target.value)}
             onClick={(e) => e.stopPropagation()}
