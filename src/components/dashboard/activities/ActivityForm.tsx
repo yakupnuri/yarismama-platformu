@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { CompetitionActivity } from "../CompetitionActivity";
-import { CheckboxActivity } from "../CheckboxActivity";
 import { competitionActivities } from "@/data/competitionActivities";
-import { Heart } from "lucide-react";
+import { CompetitionSection } from "./forms/CompetitionSection";
+import { DailyTasksSection } from "./forms/DailyTasksSection";
 
 interface ActivityFormProps {
   userAge: string;
@@ -18,44 +17,6 @@ export const ActivityForm = ({ userAge, onScoreUpdate }: ActivityFormProps) => {
   const [uploadedImages, setUploadedImages] = useState<{ [key: string]: string }>({});
   const [submittedActivities, setSubmittedActivities] = useState<string[]>([]);
   const { toast } = useToast();
-
-  const checkboxActivities = [
-    { id: "family", name: "Aileye Yardım Etme Çizelgesi", points: 2 },
-    { id: "kindness", name: "İyilik Yapma Yarışması", points: 2 },
-    { id: "healthy", name: "Sağlıklı Besin Yeme Yarışması", points: 2 },
-    { id: "electronics", name: "Elektronik Cihazları Kontrollü Kullanma Yarışması", points: 2 },
-  ];
-
-  const handleImageUpload = (activityId: string, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "Hata",
-        description: "Dosya boyutu 5MB'dan küçük olmalıdır!",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const userName = localStorage.getItem("userName") || "isimsiz";
-    const timestamp = new Date().toISOString().slice(0, 10);
-    const newFileName = `${userName}_${activityId}_${timestamp}`;
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setUploadedImages(prev => ({
-        ...prev,
-        [activityId]: reader.result as string
-      }));
-      toast({
-        title: "Başarılı",
-        description: "Resim başarıyla yüklendi!",
-      });
-    };
-    reader.readAsDataURL(file);
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,9 +61,15 @@ export const ActivityForm = ({ userAge, onScoreUpdate }: ActivityFormProps) => {
 
     Object.entries(checkedItems).forEach(([activityId, checked]) => {
       if (checked) {
-        const activity = checkboxActivities.find(a => a.id === activityId);
-        if (activity) {
-          totalPoints += activity.points;
+        const checkboxActivity = [
+          { id: "family", points: 2 },
+          { id: "kindness", points: 2 },
+          { id: "healthy", points: 2 },
+          { id: "electronics", points: 2 },
+        ].find(a => a.id === activityId);
+        
+        if (checkboxActivity) {
+          totalPoints += checkboxActivity.points;
         }
       }
     });
@@ -129,53 +96,20 @@ export const ActivityForm = ({ userAge, onScoreUpdate }: ActivityFormProps) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-4 animate-fade-in">
-        {competitionActivities.map((activity) => (
-          <CompetitionActivity
-            key={activity.id}
-            {...activity}
-            selected={selectedActivity === activity.id}
-            activityValue={activityValues[activity.id] || ""}
-            uploadedImage={uploadedImages[activity.id]}
-            disabled={submittedActivities.includes(activity.id) && activity.isJuryEvaluated}
-            onSelect={() => setSelectedActivity(activity.id)}
-            onValueChange={(value) => {
-              setActivityValues(prev => ({
-                ...prev,
-                [activity.id]: value
-              }));
-            }}
-            onImageUpload={(e) => handleImageUpload(activity.id, e)}
-            onImageRemove={() => {
-              setUploadedImages(prev => {
-                const newImages = { ...prev };
-                delete newImages[activity.id];
-                return newImages;
-              });
-            }}
-          />
-        ))}
-      </div>
+      <CompetitionSection
+        selectedActivity={selectedActivity}
+        activityValues={activityValues}
+        uploadedImages={uploadedImages}
+        submittedActivities={submittedActivities}
+        setSelectedActivity={setSelectedActivity}
+        setActivityValues={setActivityValues}
+        setUploadedImages={setUploadedImages}
+      />
 
-      <div className="space-y-4 mt-8 animate-fade-in">
-        <h3 className="text-lg font-semibold text-[#FF69B4] flex items-center gap-2">
-          <Heart className="w-5 h-5" />
-          Günlük Görevler
-        </h3>
-        {checkboxActivities.map((activity) => (
-          <CheckboxActivity
-            key={activity.id}
-            {...activity}
-            checked={checkedItems[activity.id] || false}
-            onCheckedChange={(checked) => {
-              setCheckedItems(prev => ({
-                ...prev,
-                [activity.id]: checked === true
-              }));
-            }}
-          />
-        ))}
-      </div>
+      <DailyTasksSection
+        checkedItems={checkedItems}
+        setCheckedItems={setCheckedItems}
+      />
 
       <Button 
         type="submit" 
