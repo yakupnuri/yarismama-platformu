@@ -4,6 +4,8 @@ import { useToast } from "@/hooks/use-toast";
 import { competitionActivities } from "@/data/competitionActivities";
 import { CompetitionSection } from "./forms/CompetitionSection";
 import { DailyTasksSection } from "./forms/DailyTasksSection";
+import { submitActivity } from "@/services/api";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ActivityFormProps {
   userAge: string;
@@ -17,8 +19,9 @@ export const ActivityForm = ({ userAge, onScoreUpdate }: ActivityFormProps) => {
   const [uploadedImages, setUploadedImages] = useState<{ [key: string]: string }>({});
   const [submittedActivities, setSubmittedActivities] = useState<string[]>([]);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const hasSelectedActivity = Object.keys(activityValues).length > 0 || 
@@ -34,64 +37,61 @@ export const ActivityForm = ({ userAge, onScoreUpdate }: ActivityFormProps) => {
       return;
     }
 
-    // Validate numeric inputs
-    const invalidInputs = Object.entries(activityValues).filter(([_, value]) => {
-      const numValue = Number(value);
-      return isNaN(numValue) || numValue < 0;
-    });
-
-    if (invalidInputs.length > 0) {
-      toast({
-        title: "Hata",
-        description: "Lütfen geçerli sayısal değerler girin!",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Calculate total points
-    let totalPoints = 0;
-
-    Object.entries(activityValues).forEach(([activityId, value]) => {
-      const activity = competitionActivities.find(a => a.id === activityId);
-      if (activity?.points) {
-        totalPoints += activity.points * Number(value);
+    try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        toast({
+          title: "Hata",
+          description: "Kullanıcı bilgisi bulunamadı!",
+          variant: "destructive",
+        });
+        return;
       }
-    });
 
-    Object.entries(checkedItems).forEach(([activityId, checked]) => {
-      if (checked) {
-        const checkboxActivity = [
-          { id: "family", points: 2 },
-          { id: "kindness", points: 2 },
-          { id: "healthy", points: 2 },
-          { id: "electronics", points: 2 },
-        ].find(a => a.id === activityId);
-        
-        if (checkboxActivity) {
-          totalPoints += checkboxActivity.points;
+      // Aktiviteleri gönder
+      for (const [activityId, value] of Object.entries(activityValues)) {
+        const numValue = Number(value);
+        if (!isNaN(numValue) && numValue > 0) {
+          await submitActivity({
+            userId,
+            type: activityId,
+            value: numValue
+          });
         }
       }
-    });
 
-    // Update submitted activities
-    const newSubmittedActivities = [...submittedActivities];
-    Object.keys(uploadedImages).forEach(activityId => {
-      if (!submittedActivities.includes(activityId)) {
-        newSubmittedActivities.push(activityId);
+      // Günlük görevleri gönder
+      for (const [taskId, checked] of Object.entries(checkedItems)) {
+        if (checked) {
+          await submitActivity({
+            userId,
+            type: taskId,
+            value: 1
+          });
+        }
       }
-    });
-    
-    setSubmittedActivities(newSubmittedActivities);
-    localStorage.setItem("submittedActivities", JSON.stringify(newSubmittedActivities));
 
-    // Update score
-    onScoreUpdate(totalPoints);
+      // Cache'i güncelle
+      await queryClient.invalidateQueries({ queryKey: ['leaderboard'] });
+      
+      toast({
+        title: "Başarılı",
+        description: "Etkinlikler kaydedildi!",
+      });
 
-    toast({
-      title: "Başarılı",
-      description: "Etkinlikler kaydedildi!",
-    });
+      // Form state'ini sıfırla
+      setActivityValues({});
+      setCheckedItems({});
+      setUploadedImages({});
+      
+    } catch (error) {
+      console.error('Activity submission error:', error);
+      toast({
+        title: "Hata",
+        description: "Etkinlikler kaydedilirken bir hata oluştu!",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -113,7 +113,7 @@ export const ActivityForm = ({ userAge, onScoreUpdate }: ActivityFormProps) => {
 
       <Button 
         type="submit" 
-        className="w-full bg-gradient-to-r from-[#40E0D0] to-[#89CFF0] hover:opacity-90 transition-all duration-300 text-white font-bold py-6 text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] rounded-xl border-none"
+        className="w-full bg-[#9b87f5] hover:bg-[#8b75f4] text-white font-bold py-6 text-lg shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98] rounded-xl border-none"
       >
         Etkinlikleri Kaydet 🎉
       </Button>

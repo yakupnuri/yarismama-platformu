@@ -5,48 +5,32 @@ import { Trophy, Medal } from "lucide-react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import axios from "axios";
+import { getLeaderboard } from "@/services/api";
 
-interface Ranking {
-  name: string;
-  points: number;
+interface LeaderboardUser {
+  email: string;
+  score: number;
+  color: string;
 }
-
-const fetchLeaderboard = async () => {
-  try {
-    const response = await axios.get('/api/user/leaderboard');
-    if (response.data && Array.isArray(response.data)) {
-      return response.data.map((user: any) => ({
-        name: user.email.split('@')[0],
-        points: user.score || 0
-      }));
-    }
-    throw new Error('Invalid data format received from API');
-  } catch (error) {
-    console.error('Error fetching leaderboard:', error);
-    throw error;
-  }
-};
 
 export const Leaderboard = () => {
   const { toast } = useToast();
-  const { data: rankings, error } = useQuery({
+  
+  const { data: rankings, error, isLoading } = useQuery({
     queryKey: ['leaderboard'],
-    queryFn: fetchLeaderboard,
-    initialData: [
-      { name: "Ahmet", points: 450 },
-      { name: "Ayşe", points: 400 },
-      { name: "Mehmet", points: 350 },
-      { name: "Fatma", points: 300 },
-      { name: "Ali", points: 250 },
-    ]
+    queryFn: getLeaderboard,
+    select: (data: LeaderboardUser[]) => data.map(user => ({
+      name: user.email.split('@')[0],
+      points: user.score || 0,
+      color: user.color
+    }))
   });
 
   useEffect(() => {
     if (error) {
       toast({
         title: "Veri yüklenirken hata oluştu",
-        description: "Örnek veriler gösteriliyor",
+        description: "Lütfen daha sonra tekrar deneyin",
         variant: "destructive",
       });
     }
@@ -65,6 +49,24 @@ export const Leaderboard = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold flex items-center gap-2">
+            <Trophy className="w-6 h-6 text-primary" />
+            Liderlik Tablosu Yükleniyor...
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {[1, 2, 3, 4, 5].map((_, index) => (
+            <div key={index} className="h-16 bg-gray-100 animate-pulse rounded-lg" />
+          ))}
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -80,7 +82,7 @@ export const Leaderboard = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
-            className="flex items-center gap-4 p-3 rounded-lg bg-gradient-to-r from-white to-gray-50 hover:shadow-md transition-all"
+            className="flex items-center gap-4 p-3 rounded-lg bg-white hover:shadow-md transition-all border border-gray-100"
           >
             {getPositionIcon(index)}
             <div className="flex-1">
