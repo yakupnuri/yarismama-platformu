@@ -11,13 +11,14 @@ const Index = () => {
   const [showPrizesModal, setShowPrizesModal] = useState(false);
   const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'error'>('checking');
   const { toast } = useToast();
+  const [retryCount, setRetryCount] = useState(0);
+  const MAX_RETRIES = 3;
 
   useEffect(() => {
     const checkDbConnection = async () => {
       try {
-        // Use environment-aware API URL
         const apiUrl = import.meta.env.PROD 
-          ? 'https://your-production-api.com' // Replace with your actual production API URL
+          ? 'https://your-production-api.com'
           : 'http://localhost:5000';
 
         const response = await fetch(`${apiUrl}/`);
@@ -32,22 +33,35 @@ const Index = () => {
             description: "Veritabanı bağlantısı kuruldu",
           });
         } else {
-          setDbStatus('error');
           throw new Error('Unexpected API response');
         }
       } catch (error) {
-        setDbStatus('error');
         console.error('Veritabanı bağlantı hatası:', error);
-        toast({
-          title: "Bağlantı Hatası",
-          description: "Şu anda sunucuya bağlanılamıyor. Lütfen daha sonra tekrar deneyin.",
-          variant: "destructive",
-        });
+        setDbStatus('error');
+        
+        if (retryCount < MAX_RETRIES) {
+          toast({
+            title: "Bağlantı Hatası",
+            description: `Yeniden bağlanılıyor... (Deneme ${retryCount + 1}/${MAX_RETRIES})`,
+            variant: "destructive",
+          });
+          
+          // 3 saniye sonra tekrar dene
+          setTimeout(() => {
+            setRetryCount(prev => prev + 1);
+          }, 3000);
+        } else {
+          toast({
+            title: "Bağlantı Başarısız",
+            description: "Maksimum deneme sayısına ulaşıldı. Lütfen daha sonra tekrar deneyin.",
+            variant: "destructive",
+          });
+        }
       }
     };
 
     checkDbConnection();
-  }, [toast]);
+  }, [toast, retryCount]); // retryCount değiştiğinde useEffect yeniden çalışır
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100">
@@ -111,7 +125,7 @@ const Index = () => {
             {dbStatus === 'connected' 
               ? '✓ Veritabanı Bağlantısı Aktif' 
               : dbStatus === 'error' 
-                ? '✗ Veritabanı Bağlantı Hatası'
+                ? `✗ Veritabanı Bağlantı Hatası (${retryCount}/${MAX_RETRIES} deneme)`
                 : '⟳ Veritabanı Bağlantısı Kontrol Ediliyor'}
           </div>
         </div>
